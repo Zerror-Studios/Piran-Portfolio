@@ -28,7 +28,7 @@ const SuccessPopup = ({ isOpen, onClose }) => {
                 <div className=" flex flex-col justify-between h-full space-y-6">
                     <h3 className="text-[#0B1A2C]  font-medium m-0">Received.</h3>
                     <p className="text-xl md:text-2xl text-[#0B1A2C] opacity-80 m-0">
-                        A reply from <a href="mailto:me@pirantee.com" className="text-[#883F27] hover:underline font-medium">me@pirantee.com</a> is on its way, usually within two days.
+                        Received. A reply is on its way, usually within two days.
                     </p>
                 </div>
             </div>

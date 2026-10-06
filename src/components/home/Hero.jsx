@@ -109,111 +109,52 @@ const Hero = () => {
       duration: 1,
       ease: "power2.inOut"
     });
-    masterTl.to([".vid_cont", ".hero_logos"], {
+    masterTl.to([".vid_cont"], {
       opacity: 1,
-      stagger: 0.15
     }, ">");
 
   });
 
-  const logoData = [
-    {
-      id: 1,
-      desc: "A strategic partner to the Poonawalla Group across startups, real estate, and brand ventures.",
-      img: "/images/homepage/hero/logo3.svg",
-      author: "Poonawalla Group"
-    }, {
-      id: 2,
-      img: "/images/homepage/hero/logo2.svg",
-      desc: "A postgraduate year in marketing communication at the University of Melbourne, where international rooms sharpened the thinking and the speaking.",
-      author: "University of Melbourne"
-    },
-    {
-      id: 3,
-      img: "/images/homepage/hero/logo1.svg",
-      desc: "A founder in Build3's tenth cohort, where the next venture took shape in the nutraceutical space.",
-      author: "Build3"
-    }
-  ];
-
   if (isMobile) return null;
 
   return (
-    <div className="   w-full h-screen relative bg-[#0B1A2C] text-white overflow-hidden">
-
-      <LogoParticlesNew />
+    <div className="   w-full h-screen relative  text-white overflow-hidden">
 
       <div className=" content_box opacity-0 container pb-5 relative z-10 w-full h-full flex items-end pointer-events-none">
         <div className=" absolute w-full h-full flex items-center pointer-events-auto">
           <h1 className=" w-full leading-18">
             <div className="wrapper_heading block w-full overflow-hidden">
               <div className="txt2_head">
-                Building brands.
+                Will it launch,
               </div>
             </div>
             <div className="wrapper_heading block w-full overflow-hidden">
               <div className="txt2_head">
-                Backing founders.
+                or will it last?
               </div>
             </div>
           </h1>
         </div>
 
-        <div className='w-full'>
-          <div className="flex flex-col pb-5 md:flex-row justify-between items-start md:items-end w-full gap-10 md:gap-8 pointer-events-auto">
-            <div className="max-w-lg w-full">
-              <p data-para-effect className=" paragraph_split opacity-60 leading-tight">
-                The strategy comes first, the equity follows <br /> conviction, and the partnership stays long after.
-              </p>
+        <div className='w-full flex justify-between items-end'>
+          <div className=" w-fit space-y-5">
+            <p className=" paragraph_split opacity-60 leading-tight">
+              The world is starting more companies than it can remember. <br /> Plenty find a first customer, and far fewer live to see a tenth birthday.
+            </p>
+            <p className=" paragraph_split opacity-60 leading-tight">
+              Launching takes a product. Lasting takes everything around it: <br /> the position it holds, the partners it keeps, and the capital that believes in it.
+            </p>
+          </div>
+          <div className=" vid_cont opacity-0  relative w-72 aspect-video">
+            <div
+              ref={videoThumbRef}
+              onClick={!expanded ? toggleVideo : undefined}
+              className={`overflow-hidden flex items-center pointer-events-auto justify-center transform-gpu absolute inset-0 w-full h-full rounded-xl  cursor-pointer`}
+            >
             </div>
 
-            <div className="   flex flex-col md:flex-row items-start md:items-end gap-6">
-              <div className="text-left md:text-right">
-                <div className="hero_logos opacity-0">
-                  <RotatingText />
-                </div>
-                <p className="hero_logos opacity-0 "><LiveTime /></p>
-              </div>
-
-              <div className=" vid_cont opacity-0  relative w-72 aspect-video">
-                {/* Thumbnail Div */}
-                <div
-                  ref={videoThumbRef}
-                  onClick={!expanded ? toggleVideo : undefined}
-                  className={`overflow-hidden flex items-center justify-center transform-gpu absolute inset-0 w-full h-full rounded-xl  cursor-pointer`}
-                >
-                </div>
-              </div>
-            </div>
           </div>
 
-          <div className="border-t border-white/10 pt-5">
-            <div className="flex gap-x-12 items-center pointer-events-auto">
-              {logoData.map((item, i) => (
-                <div key={item.id} className=" hero_logos opacity-0 group relative cursor-pointer">
-                  <Image
-                    width={80}
-                    height={56}
-                    src={item.img}
-                    alt={item.author}
-                    className="h-14 w-auto object-contain opacity-50 group-hover:opacity-100 transition-opacity duration-300"
-                  />
-
-                  <div className="absolute bottom-full left-0 space-y-4 mb-2 w-80 bg-[#ffffff] text-black p-6 rounded-md shadow-2xl opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 pointer-events-none z-50">
-                    <div className="">
-                      <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="quote icon" />
-                    </div>
-                    <p className="text-lg  leading-tight font-medium text-black">
-                      {item.desc}
-                    </p>
-                    <p className="text-xs font-bold opacity-70 uppercase ">
-                      {item.author}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </div>
       </div>
 

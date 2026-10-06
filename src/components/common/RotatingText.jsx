@@ -57,7 +57,7 @@ export const RotatingText = () => {
         yPercent: -100,
         duration: 0.3,
         ease: "power2.out",
-        stagger: 0.02
+        stagger: 0.015
       }, 0);
 
       // Next chars slide in from below (100 -> 0) with stagger, in parallel
@@ -74,7 +74,7 @@ export const RotatingText = () => {
   }, []);
 
   return (
-    <div className="  relative h-6 overflow-hidden uppercase flex justify-start items-center">
+    <div className="  relative h-4.5 overflow-hidden  w-44 ">
       <div ref={currentRowRef} className="flex relative" />
       <div ref={nextRowRef} className="flex absolute top-0 left-0" />
     </div>

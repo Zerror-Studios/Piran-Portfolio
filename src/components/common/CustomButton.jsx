@@ -3,18 +3,18 @@ import React from 'react';
 import { Link } from 'next-view-transitions';
 import { RiAddLine, RiArrowRightUpLine } from '@remixicon/react';
 
-const CustomButton = ({ 
-  children, 
-  href, 
-  onClick, 
+const CustomButton = ({
+  children,
+  href,
+  onClick,
   type = "button",
-  className = "", 
+  className = "",
   disabled = false,
   theme = "light", // "light" or "dark"
   icon = "arrow"
 }) => {
   const isLight = theme === "light";
-  
+
   const btnThemeClass = isLight ? "bg-white text-[#883F27]" : "bg-[#883F27] text-[#ffffff]";
   const dotThemeClass = isLight ? "text-white bg-[#883F27]" : "text-[#883F27] bg-[#ffffff]";
 

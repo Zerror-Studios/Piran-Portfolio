@@ -1,16 +1,16 @@
 "use client";
 import React, { useState } from 'react';
 import CustomButton from '../common/CustomButton';
-import { useThesisStore } from '@/store/useThesisStore';
+
 
 const faqs = [
     {
         question: "What exactly do you help founders with?",
-        answer: "Clarity first: positioning, direction, and the narrative that holds it together. Then execution through Point Of and its brand partners, and for the right founders, backing. The order matters."
+        answer: "Clarity first: positioning, direction, and the narrative that holds it together. Then execution through vetted brand partners, and for the right founders, backing. The order matters."
     },
     {
         question: "Who do you typically work with?",
-        answer: "Founders early in the journey. The equity work leans brand-led; the investments sit in wellness, healthcare, and financial services. A handful at a time, never more.",
+        answer: "Founders early in the journey, usually pre-seed to seed, where positioning is the bottleneck. A handful at a time, never more. where positioning is the bottleneck",
         hasThesisButton: true
     },
     {
@@ -23,7 +23,7 @@ const faqs = [
     },
     {
         question: "How do engagements typically work?",
-        answer: "A first conversation, then a structured questionnaire, then alignment on scope, involvement, equity, and milestones. Deliberate, not slow."
+        answer: "An introductory call, then a questionnaire, then alignment on scope, involvement, equity and cadence. Deliberate, not slow."
     },
     {
         question: "Do you work with early-stage startups?",
@@ -35,12 +35,12 @@ const faqs = [
     },
     {
         question: "What don't you do?",
-        answer: "Templates, takeovers, passive cheques, and quick flips. If speed at any cost is the plan, we're not aligned."
+        answer: "Passive involvement, templates, takeovers, quick flips, and capital without conviction. If speed at any cost is the plan, we're not aligned."
     }
 ];
 
 const FAQ = () => {
-    const { openThesis } = useThesisStore();
+
     const [openIndex, setOpenIndex] = useState(null); // Set second item open by default to match screenshot, or just null. Let's do 1.
 
     const toggleFaq = (index) => {
@@ -55,8 +55,8 @@ const FAQ = () => {
                     
                     {/* Left: Title */}
                     <div className='col-span-2'>
-                        <h2 className="leading-tight text-[#0B1A2C] sticky top-32 m-0">
-                            Frequently Asked<br/>Questions
+                        <h2 data-para-effect className="leading-none text-[#0B1A2C] sticky top-32 m-0">
+                            Questions <br /> founders  ask
                         </h2>
                     </div>
 
@@ -91,7 +91,7 @@ const FAQ = () => {
                                             </p>
                                             {faq.hasThesisButton && (
                                                 <div className="pb-6">
-                                                    <CustomButton icon="add" theme='dark' onClick={openThesis} className="w-fit">
+                                                    <CustomButton theme='dark' href="/thesis" className="w-fit">
                                                         Read the full thesis
                                                     </CustomButton>
                                                 </div>

@@ -44,7 +44,7 @@ export default function GallerySection() {
     })
 
     return (
-        <main className=" gallery-paren relative  overflow-hidden flex items-center justify-center select-none font-sans">
+        <main className=" gallery-paren relative  overflow-hidden flex items-center justify-center select-none ">
 
             {/* Main 16:9 Living Room Stage */}
             <div
@@ -57,8 +57,7 @@ export default function GallerySection() {
                     alt="Piran reading newspaper on sofa"
                     fill
                     priority
-                    sizes="100vw"
-                    className="object-contain pointer-events-none select-none"
+                    className="object-cover pointer-events-none select-none"
                 />
 
                 {/* Interactive Picture Frames on the Wall */}
@@ -103,13 +102,13 @@ export default function GallerySection() {
                                     <div
                                         className=" w-60 absolute left-1/2 -translate-x-1/2 bottom-[calc(100%+8px)] z-50  cursor-auto animate-in fade-in zoom-in-95 duration-200"
                                     >
-                                        <div className=" w-full bg-[#ffffff] rounded-xs text-black text-left p-4   shadow-2xl">
+                                        <div className=" w-full bg-[#ffffff] rounded-xs text-[#0b1a2c] text-left p-4   shadow-2xl">
                                             <div className=" w-full  flex items-center justify-between">
                                                 <p className="font-semibold   uppercase">
                                                     {item.title}
                                                 </p>
                                                 <div
-                                                    onClick={() => setOpenGallerySwiper(item)} className="size-5 hover:bg-black hover:text-white cursor-pointer transition-all duration-300 border border-black/50 center rounded-full">
+                                                    onClick={() => setOpenGallerySwiper(item)} className="size-5 hover:bg-[#0b1a2c] hover:text-white cursor-pointer transition-all duration-300 border border-[#0b1a2c]/50 center rounded-full">
                                                     <RiAddLine className="size-3" />
                                                 </div>
                                             </div>

@@ -3,17 +3,34 @@ import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import Image from 'next/image'
 import React, { useRef, useState } from 'react'
+import { RotatingText } from '../common/RotatingText';
+import { LiveTime } from '../common/LiveTime';
 
-const images = [
-    "/images/homepage/about_section/piran_pic.png",
-    "/images/homepage/about_section/piran_pic_2.png",
-]
+const logoData = [
+    {
+        id: 1,
+        desc: "A strategic partner to the Poonawalla Group across startups, real estate, and brand ventures.",
+        img: "/images/homepage/hero/logo3.svg",
+        author: "Poonawalla Group"
+    }, {
+        id: 2,
+        img: "/images/homepage/hero/logo2.svg",
+        desc: "A postgraduate year in marketing communication at the University of Melbourne, where international rooms sharpened the thinking and the speaking.",
+        author: "University of Melbourne"
+    },
+    {
+        id: 3,
+        img: "/images/homepage/hero/logo1.svg",
+        desc: "A founder in Build3's tenth cohort, where the next venture took shape in the nutraceutical space.",
+        author: "Build3"
+    }
+];
+
 
 const About = () => {
 
     const containerRef = useRef()
-    const [currentImg, setCurrentImg] = useState(images[0])
-    
+
     useGSAP(() => {
         const tl = gsap.timeline({
             scrollTrigger: {
@@ -23,36 +40,49 @@ const About = () => {
                 scrub: true,
             }
         })
+        tl.to(".int_hd_first", {
+            y: -200,
+            duration: 1
+        })
+        tl.to(".oopp_o", {
+            opacity: 1,
+            duration: 0.5
+        }, "<")
+        tl.to(".int_hd_first", {
+            opacity: 0,
+            duration: 0.5
+        })
         tl.to(".intro_txt", {
             opacity: 1,
             stagger: 0.5,
-            duration:0.25,
+            duration: 0.25,
         })
         tl.to(".int_hd", {
             y: -200,
-            duration:1
+            duration: 1
         })
-        tl.to(".int_hd", {
+        tl.to([".int_hd", ".logo_op"], {
             opacity: 0,
-            duration:0.5
+            duration: 0.5,
+            pointerEvents: "none"
         })
         tl.to(".piran_img", {
             opacity: 1,
-            duration:0.25,
+            duration: 0.25,
         }, "<")
         tl.to(".intro_txt", {
             opacity: 0,
-            duration:0.25,
+            duration: 0.25,
         }, "<")
         tl.to(".above_img_txt", {
             opacity: 1,
-            duration:0.25,
-            delay:0.5,
+            duration: 0.25,
+            delay: 0.5,
         })
-        tl.to([".above_img_txt",".piran_img", ".img_toggle_btns"], {
+        tl.to([".above_img_txt", ".piran_img", ".img_toggle_btns"], {
             opacity: 0,
-            duration:0.25,
-            delay:0.5,
+            duration: 0.25,
+            delay: 0.5,
         })
         tl.to(".abt_txt_1", {
             opacity: 1,
@@ -67,12 +97,56 @@ const About = () => {
 
     return (
         <>
-            <div ref={containerRef} className="w-full relative h-[350vh] bg-[#0B1A2C]">
+            <div ref={containerRef} className="w-full about_section relative h-[350vh] ">
                 <div className=" sticky_bg sticky top-0 w-full h-screen center flex-col text-center leading-none overflow-hidden">
+
+                    <div className="absolute z-100 bottom-5 flex justify-between w-full  w-fit left-0  text-white  pointer-events-auto padding">
+                        <div className="flex gap-x-12 items-center pointer-events-auto">
+                            {logoData.map((item, i) => (
+                                <div key={item.id} className=" logo_op oopp_o opacity-0 pointer-events-auto text-left  group relative cursor-pointer">
+                                    <Image
+                                        width={80}
+                                        height={56}
+                                        src={item.img}
+                                        alt={item.author}
+                                        className="h-14 w-auto object-contain opacity-50 group-hover:opacity-100 transition-opacity duration-300"
+                                    />
+
+                                    <div className="absolute bottom-full left-0 space-y-4 mb-2 w-80 bg-[#ffffff] text-black p-6 rounded-md shadow-2xl opacity-0 translate-y-5 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 pointer-events-none z-50">
+                                        <div className="">
+                                            <Image height={20} width={20} className='invert-100' src="/icons/quote.svg" alt="quote icon" />
+                                        </div>
+                                        <p className="text-lg  leading-tight font-medium text-black">
+                                            {item.desc}
+                                        </p>
+                                        <p className="text-xs font-bold opacity-70 uppercase ">
+                                            {item.author}
+                                        </p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className=" logo_op oopp_o opacity-0  z-10 gap-y-1   flex flex-col items-end text-white ">
+                            <div className="w-fit">
+                                <div className="w-32.5">
+                                    <RotatingText />
+                                </div>
+                                <div className="w-fit">
+                                    <LiveTime />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="text-white absolute int_hd_first">
+                        <h2 data-para-effect className=''> <span className=' intro_txt_prev'>Building brands.</span></h2>
+                        <h2 data-para-effect className=''> <span className=' intro_txt_prev'>Backing founders.</span></h2>
+                    </div>
                     <div className="text-white int_hd">
-                        <h2 className=''> <span className=' intro_txt_a intro_txt opacity-0'>Piran</span> <span className='intro_txt opacity-0'>Tarapore</span></h2>
+                        <h2 className=''> <span className=' intro_txt_a intro_txt opacity-0'>MEET</span> <span className='intro_txt opacity-0'>PIRAN</span></h2>
+                        <div className="w-full intro_txt opacity-0 h-px rounded-full bg-white"></div>
                         <div className="intro_txt opacity-0">
-                            <p className='text-lg  opacity-70'>Brand Architect & Strategic Catalyst</p>
+                            <p className='text-lg italic  opacity-70'>Brand architect to early-stage founders</p>
                         </div>
                     </div>
 
@@ -80,32 +154,15 @@ const About = () => {
                         <div className=" above_img_txt absolute! container  top-[16%] opacity-0 text-white z-10 ">
                             <h4 className='md:w-[70%] mx-auto'>Piran Tarapore has spent seven years turning founders' ambiguity into brands the world can understand, trust, and want. He is building a practice where brand thinking is infrastructure, not a service layer on top of execution.</h4>
                         </div>
-                        <div className=" h-[70vh] absolute z-99 aspect-2/3 left-1/2 -translate-x-1/2 bottom-0">
-                            <Image fill  src={currentImg} className=' cover piran_img grayscale-100 opacity-0' alt='Piran Tarapore' />
-                            
-                            {/* Image Switcher Buttons */}
-                            <div className="img_toggle_btns absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1 bg-black/40 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/20 pointer-events-auto cursor-pointer z-99999">
-                                {images.map((img, index) => (
-                                    <button
-                                        key={index}
-                                        onClick={() => setCurrentImg(img)}
-                                        className={`px-2 py-1 rounded-full text-xs font-medium transition-all duration-300 ${
-                                            currentImg === img
-                                                ? "bg-white text-[#0B1A2C] shadow-sm"
-                                                : "text-white/70 hover:text-white"
-                                        }`}
-                                    >
-                                         {index + 1}
-                                    </button>
-                                ))}
-                            </div>
+                        <div className="  absolute z-99   left-1/2 -translate-x-1/2 bottom-0">
+                            <Image width={1920} height={1080} src={"/images/homepage/about_section/piran_pic.png"} className=' cover piran_img grayscale-100 opacity-0' alt='Piran Tarapore' />
                         </div>
                     </div>
 
                     <div className="w-full container absolute! space-y-12 text-white inset-0 h-full center flex-col">
-                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_1'>In service of that, he founded Point Of, the independent creative consultancy behind 170+ brands across five continents.</h4>
-                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_2'>Where the alignment runs deep, he invests strategic equity in the brands he builds with, and positions in the businesses he believes in.</h4>
-                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_3'>Piran is dedicated to the long game work that means something, people who grow together, and things built carefully enough to last.</h4>
+                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_1'>In service of that, founded Point Of, the independent consultancy behind 170+ brands across five continents.</h4>
+                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_2'>Where the alignment runs deep, he invests: strategic equity in the brands he builds with, and positions in the businesses he believes in.</h4>
+                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_3'>Piran is dedicated to the long game: work that means something, people who grow together, and things built carefully enough to last.</h4>
                     </div>
 
                 </div>

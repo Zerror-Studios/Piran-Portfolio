@@ -118,39 +118,49 @@ varying float vTerrainHeight;
 varying vec2  vScreenPos;
 
 void main(){
-  // Line thickness
-  float thick = 0.12;
+  // ── Prussian-blue palette ramp ──
+  // Deep Prussian navy  → mid Prussian  → lighter steel-blue
+  vec3 prussianDeep = vec3(0.004, 0.082, 0.165);   // #011528
+  vec3 prussianMid  = vec3(0.012, 0.141, 0.286);   // #032449
+  vec3 prussianLite = vec3(0.047, 0.227, 0.412);   // #0C3A69
+
+  // Ramp based on UV.y — bottom is darkest, top (horizon) is lightest
+  float rampT = smoothstep(0.0, 1.0, vUv.y);
+  vec3 seaColor = mix(prussianDeep, prussianLite, rampT);
+  // Add a subtle mid-tone band
+  seaColor = mix(seaColor, prussianMid, smoothstep(0.3, 0.5, rampT) * smoothstep(0.7, 0.5, rampT) * 0.6);
+  
+  // ── Hairline horizontal flow-lines ──
+  float thick = 0.04;  // Very thin hairlines
   
   // Flow lines based on mouse offset and time to match ocean direction
   float linePosY = fract(vUv.y * uGridSize - uMouseOffset.y * 2.0 - uTime * 0.03);
   
-  // Smooth anti-aliased horizontal lines
-  float alphaY = smoothstep(thick, thick - 0.015, linePosY) + smoothstep(1.0 - thick, 1.0 - thick + 0.015, linePosY);
+  // Smooth anti-aliased hairlines
+  float alphaY = smoothstep(thick, thick - 0.008, linePosY)
+               + smoothstep(1.0 - thick, 1.0 - thick + 0.008, linePosY);
   
-  // White color for grid strip lines
-  vec3 lineCol = vec3(1.0, 1.0, 1.0);
+  // Hairline color: a pale Prussian-blue highlight
+  vec3 lineCol = vec3(0.15, 0.35, 0.55);
   
-  // Background color #883F27
-  vec3 bgColor = vec3(0.5333, 0.2471, 0.1529);
+  // Background: Prussian deep
+  vec3 bgColor = prussianDeep;
   
   // Soft radial fade-out (fog) at the edges of the plane for the lines
   float dist = distance(vUv, vec2(0.5, 0.5));
   float fog = smoothstep(0.5, 0.15, dist);
   
-  // Screen-space bottom gradient fade (exactly matches the old HTML overlay)
-  // vScreenPos.y goes from -1 (bottom of screen) to 1 (top of screen)
+  // Screen-space bottom gradient fade
   float bottomFade = smoothstep(-1.0, 0.0, vScreenPos.y);
-  vec3 finalColorRGB = mix(bgColor, lineCol, alphaY * fog * bottomFade);
+  
+  // Composite: sea colour + hairline strokes on top
+  vec3 finalColorRGB = seaColor;
+  if (uShowGrid) {
+    finalColorRGB = mix(seaColor, lineCol, alphaY * fog * bottomFade * 0.5);
+  }
   
   // The plane itself is now completely opaque to occlude the moon
-  vec4 finalColour = vec4(finalColorRGB, 1.0);
-  
-  // Only show if grid is enabled
-  if (!uShowGrid) {
-    finalColour = vec4(bgColor, 1.0);
-  }
-
-  gl_FragColor = finalColour;
+  gl_FragColor = vec4(finalColorRGB, 1.0);
 }
 `;
 
@@ -201,9 +211,9 @@ const WavePlane = ({
   palette,
 }) => {
   const viewport = useThree((s) => s.viewport);
-  const matRef   = useRef(null);
-  const scroll   = useRef(0);
-  
+  const matRef = useRef(null);
+  const scroll = useRef(0);
+
   // Keep track of the continuous ocean movement direction
   const offsetRef = useRef(new THREE.Vector2(0, 0));
 
@@ -217,7 +227,7 @@ const WavePlane = ({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const size     = useMemo(() => Math.max(Math.round(viewport.width + 2), Math.round(viewport.height * 2)), [viewport]);
+  const size = useMemo(() => Math.max(Math.round(viewport.width + 2), Math.round(viewport.height * 2)), [viewport]);
   const segments = useMemo(() => size * 8, [size]);
 
   useFrame(({ clock, pointer }) => {
@@ -226,12 +236,12 @@ const WavePlane = ({
     matRef.current.uScrollProgress = scroll.current * 12;
     matRef.current.uColourPalette = palette;
     matRef.current.uShowGrid = showGrid;
-    
+
     // Continuously add the pointer position to change the ocean's flow direction
     // Reduced speed for a calmer continuous movement
     offsetRef.current.x += pointer.x * 0.003;
     offsetRef.current.y += pointer.y * 0.003;
-    
+
     matRef.current.uMouseOffset = offsetRef.current;
   });
 
@@ -246,7 +256,7 @@ const WavePlane = ({
         key={WavePlaneMaterial.key}
         uTime={0}
         uScrollProgress={0}
-        uMouseOffset={new THREE.Vector2(0,0)}
+        uMouseOffset={new THREE.Vector2(0, 0)}
         uColourPalette={palette}
         uShowGrid={showGrid}
         uGridSize={60}
@@ -263,15 +273,16 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// ─── Moon Globe Component ──────────────────────────────────────────────────
+// ─── Moon Globe Component (P300–P500 purple tones, hairline edge) ──────────
 
 const MoonGlobe = () => {
   const material = useMemo(
     () =>
       new ShaderMaterial({
         uniforms: {
-          uColor1: { value: new THREE.Color('#ffffff') }, // Pure white
-          uColor2: { value: new THREE.Color('#e0e0e0') }, // Light off-white
+          // Realistic moon tones
+          uColor1: { value: new THREE.Color('#E8E6E0') }, // Bright highland (warm off-white)
+          uColor2: { value: new THREE.Color('#8A8A8A') }, // Dark maria (mid gray)
         },
         vertexShader: `
           varying vec3 vNormal;
@@ -319,7 +330,7 @@ const MoonGlobe = () => {
           float fbm(vec3 p) {
               float f = 0.0;
               float amp = 0.5;
-              for(int i = 0; i < 4; i++) {
+              for(int i = 0; i < 6; i++) {
                   f += amp * smoothNoise(p);
                   p *= 2.0;
                   amp *= 0.5;
@@ -328,25 +339,39 @@ const MoonGlobe = () => {
           }
 
           void main() {
-            vec3 lightDir = normalize(vec3(0.5, 1.5, 2.0));
+            vec3 lightDir = normalize(vec3(0.4, 1.0, 1.8));
             float diff = max(dot(vNormal, lightDir), 0.0);
             
-            // Subtle noise for moon texture
-            float n1 = fbm(vPosition * 2.0); 
-            float surface = smoothstep(0.3, 0.8, n1);
-            vec3 baseColor = mix(uColor1, uColor2, surface);
+            // ── Multi-scale crater / maria surface ──
+            // Large dark patches (maria)
+            float maria = fbm(vPosition * 1.5);
+            // Medium craters
+            float craters = fbm(vPosition * 4.0 + 7.0);
+            // Fine pitting
+            float pitting = fbm(vPosition * 9.0 + 13.0);
             
-            // Bright white diffuse lighting
-            vec3 finalColor = baseColor * (diff * 0.8 + 0.5);
+            // Combine: maria darken the surface, craters add depth
+            float surface = smoothstep(0.35, 0.75, maria);
+            // Crater rims are lighter, interiors darker
+            float craterDark = smoothstep(0.3, 0.5, craters) * 0.3;
+            float craterRim  = smoothstep(0.55, 0.65, craters) * 0.15;
+            float finePit = smoothstep(0.4, 0.6, pitting) * 0.1;
             
-            // Inner glow / rim fade to make it soft
-            float rim = 1.0 - max(dot(vNormal, vec3(0.0, 0.0, 1.0)), 0.0);
+            vec3 baseColor = mix(uColor1, uColor2, surface + craterDark - craterRim + finePit);
             
-            // Smoothly fade the outer edges of the moon (make it a light fade moon)
-            float alpha = 1.0 - smoothstep(0.6, 1.0, rim);
+            // Warm diffuse lighting with slight ambient
+            vec3 finalColor = baseColor * (diff * 0.65 + 0.4);
             
-            // Add a bright glowing rim
-            finalColor += vec3(1.0, 1.0, 1.0) * smoothstep(0.5, 0.9, rim) * 0.5;
+            // ── Hairline edge ──
+            float facing = max(dot(vNormal, vec3(0.0, 0.0, 1.0)), 0.0);
+            float rim = 1.0 - facing;
+            
+            // Crisp thin white line at the silhouette
+            float hairline = smoothstep(0.88, 0.94, rim) * (1.0 - smoothstep(0.94, 1.0, rim));
+            finalColor += vec3(0.95, 0.93, 0.90) * hairline * 1.0;
+            
+            // Smooth alpha fade at the very edge for anti-aliasing
+            float alpha = 1.0 - smoothstep(0.92, 1.0, rim);
             
             gl_FragColor = vec4(finalColor, alpha);
           }
@@ -358,10 +383,10 @@ const MoonGlobe = () => {
   );
 
   const sphereRef = useRef();
-  const [isDragging, setIsDragging] = useState(false);
-  const velocity = useRef({ x: 0.0012, y: 0.003 });
-  const targetVelocity = useRef({ x: 0.0012, y: 0.003 });
-  const lastPointer = useRef({ x: 0, y: 0, time: 0 });
+  const draggingRef = useRef(false);
+  // Moon stays still by default — velocity starts at zero
+  const velocity = useRef(0);
+  const lastPointer = useRef({ x: 0, time: 0 });
   const { gl } = useThree();
 
   useGSAP(() => {
@@ -382,64 +407,66 @@ const MoonGlobe = () => {
   }, { scope: gl.domElement });
 
   useFrame(() => {
-    if (sphereRef.current && !isDragging) {
-      // Smoothly interpolate velocity towards target steady state
-      velocity.current.x += (targetVelocity.current.x - velocity.current.x) * 0.05;
-      velocity.current.y += (targetVelocity.current.y - velocity.current.y) * 0.05;
-      
-      sphereRef.current.rotation.x += velocity.current.x;
-      sphereRef.current.rotation.y += velocity.current.y;
+    if (!sphereRef.current) return;
+
+    if (!draggingRef.current) {
+      // Exponential friction — smooth deceleration with easing feel
+      velocity.current *= 0.95;
+
+      // Snap to zero when negligible
+      if (Math.abs(velocity.current) < 0.00005) {
+        velocity.current = 0;
+      }
     }
+
+    // Always apply velocity (during drag it's set by the move handler)
+    sphereRef.current.rotation.y += velocity.current;
   });
 
   const handlePointerDown = (e) => {
     e.stopPropagation();
-    setIsDragging(true);
+    draggingRef.current = true;
+    velocity.current = 0; // Kill any existing momentum
     e.target.setPointerCapture(e.pointerId);
-    lastPointer.current = { x: e.clientX, y: e.clientY, time: performance.now() };
+    gl.domElement.style.cursor = 'grabbing';
+    lastPointer.current = { x: e.clientX, time: performance.now() };
   };
 
   const handlePointerMove = (e) => {
-    if (isDragging && sphereRef.current) {
+    if (draggingRef.current && sphereRef.current) {
       e.stopPropagation();
       const now = performance.now();
       const dt = Math.max(1, now - lastPointer.current.time);
       const dx = e.clientX - lastPointer.current.x;
-      const dy = e.clientY - lastPointer.current.y;
-      
-      // Instant 1:1 rotation drag
-      sphereRef.current.rotation.y += dx * 0.01;
-      sphereRef.current.rotation.x += dy * 0.01;
-      
-      // Calculate velocity (radians per 16ms frame)
-      const vx = (dy * 0.01) / dt * 16;
-      const vy = (dx * 0.01) / dt * 16;
-      
-      velocity.current = { x: vx, y: vy };
-      lastPointer.current = { x: e.clientX, y: e.clientY, time: now };
+
+      // Direct rotation: drag right → spins right (positive Y rotation)
+      const rotDelta = dx * 0.008;
+      sphereRef.current.rotation.y += rotDelta;
+
+      // Track throw velocity (smoothed with previous to avoid spikes)
+      const instantVel = rotDelta / dt * 16; // normalise to ~60fps
+      velocity.current = velocity.current * 0.3 + instantVel * 0.7;
+
+      lastPointer.current = { x: e.clientX, time: now };
     }
   };
 
   const handlePointerUp = (e) => {
     e.stopPropagation();
-    setIsDragging(false);
+    draggingRef.current = false;
     e.target.releasePointerCapture(e.pointerId);
-    
-    // Set continuous steady rotation based on throw direction
-    const vy = velocity.current.y;
-    const vx = velocity.current.x;
-    
-    const steadyY = vy >= 0 ? 0.003 : -0.003;
-    const steadyX = vx >= 0 ? 0.0012 : -0.0012;
-    
-    targetVelocity.current = { x: steadyX, y: steadyY };
+    gl.domElement.style.cursor = 'grab';
+    // velocity.current already holds the smoothed throw speed —
+    // the useFrame friction loop takes over from here
   };
 
   return (
-    <mesh 
-      ref={sphereRef} 
+    <mesh
+      ref={sphereRef}
       position={[0, -0.8, -4]}
       renderOrder={-1}
+      onPointerEnter={() => { gl.domElement.style.cursor = 'grab'; }}
+      onPointerLeave={() => { gl.domElement.style.cursor = 'auto'; draggingRef.current = false; }}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
@@ -447,6 +474,30 @@ const MoonGlobe = () => {
     >
       <sphereGeometry args={[2.5, 64, 64]} />
       <primitive object={material} attach="material" />
+    </mesh>
+  );
+};
+
+// ─── Chestnut Horizon Point ────────────────────────────────────────────────
+// A single chestnut-coloured dot anchored at the horizon, under the moon.
+// It holds perfectly still while the water moves around it.
+
+const ChestnutPoint = () => {
+  const viewport = useThree((s) => s.viewport);
+
+  // Place the point right at the horizon where moon meets water
+  // Position: centred horizontally, at the vertical line where the water plane
+  // crosses the camera view (same Y as the top edge of the wave plane)
+  const yPos = -viewport.height / 2.5 + 0.15; // just at the wave-plane's top edge
+
+  return (
+    <mesh position={[0, yPos, 0]} renderOrder={10}>
+      <circleGeometry args={[0.06, 32]} />
+      <meshBasicMaterial
+        color="#883F27"     // chestnut
+        depthTest={false}
+        transparent={false}
+      />
     </mesh>
   );
 };
@@ -485,19 +536,12 @@ export const WavePlaneCanvas = ({
       className={className}
       camera={{ position: [0, 0, 5], fov: 60, far: 20, near: 0.001 }}
       gl={{ alpha: true, antialias: false, powerPreference: "high-performance" }}
-      style={{ background: "#883F27" }}
+      // style={{ background: "#011528" }}
     >
       <MoonGlobe />
       <WavePlane showGrid={showGrid} palette={palette} />
+      <ChestnutPoint />
       <StaticCamera />
     </Canvas>
   );
 };
-
-// ─── Full-page demo (optional) ───────────────────────────────────────────────
-
-export const WavePlanePage = () => (
-  <main className="h-[1000vh] w-full">
-    <WavePlaneCanvas className="!fixed inset-0" />
-  </main>
-);

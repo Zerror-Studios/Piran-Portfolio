@@ -14,21 +14,37 @@ const data = [
         title: "intensive",
         desc: "Deep strategic work at close rhythm, where the value concentrates.",
         num_img: "/images/homepage/workResult/num_1.svg",
-        tags: ["Diagnosis", "Positioning", "Roadmap", "Alignment"]
+        tags: [
+            { text: "Diagnosis", type: "filled" },
+            { text: "Market landscape", type: "filled" },
+            { text: "White space", type: "filled" },
+            { text: "Positioning", type: "filled" },
+            { text: "Narrative", type: "filled" },
+            { text: "Roadmap", type: "filled" }
+        ]
     },
     {
         id: 2,
         title: "building",
         desc: "Partners step in while I hold the strategic layer throughout.",
         num_img: "/images/homepage/workResult/num_2.svg",
-        tags: ["Systems", "Identity", "Taste", "Momentum"]
+        tags: [
+            { text: "Identity", type: "outline" },
+            { text: "Systems", type: "outline" },
+            { text: "Alignment", type: "filled" },
+            { text: "Review", type: "filled" }
+        ]
     },
     {
         id: 3,
         title: "steady",
         desc: "A sounding board, a door-opener, and a catalyst as the company grows.",
         num_img: "/images/homepage/workResult/num_3.svg",
-        tags: ["Partnership", "Compounding", "Trust", "Counsel"]
+        tags: [
+            { text: "Counsel", type: "filled" },
+            { text: "Introductions", type: "filled" },
+            { text: "Network", type: "filled" }
+        ]
     }
 ]
 
@@ -65,7 +81,7 @@ const WorkBehindGrowth = () => {
 
             tl.to(`.circ_${i + 1}`, {
                 scale: 1,
-                backgroundColor: "#E3E2DC",
+                backgroundColor: "#883F27",
                 duration: 0.4,
                 ease: "power1.inOut"
             }, 0);
@@ -85,40 +101,41 @@ const WorkBehindGrowth = () => {
 
     return (
         <>
-            <div className="container  bg-[#883F27] mt-12 md:mt-24 pt-12 md:pt-24 space-y-8 md:space-y-16">
+            <div className="container  pt-12 md:pt-24 space-y-8 md:space-y-16">
                 <div className="w-full relative z-10 md:text-center">
-                    <h2 data-para-effect className='leading-none text-white'>How I Work</h2>
+                    <h2 data-para-effect className='leading-none '>How I Work</h2>
                 </div>
 
                 <div className="anim_pren relative z-10 space-y-5">
 
-                    <div className="hidden md:block w-2 h-full bg-[#915541] absolute left-1/2 -translate-x-1/2 top-0">
-                        <div className=" circ_1 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  top-0 -translate-y-1/2 bg-[#915541]"></div>
-                        <div className="circ_2 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  top-1/2 -translate-y-1/2 bg-[#915541]"></div>
-                        <div className="circ_3 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  bottom-0 translate-y-1/2 bg-[#915541]"></div>
-                        <div className=" fill_line w-0.5 translate-x-0.75 bg-[#E3E2DC] h-0"></div>
+                    <div className="hidden md:block w-2 h-full bg-[#F0ECE1] absolute left-1/2 -translate-x-1/2 top-0">
+                        <div className=" circ_1 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  top-0 -translate-y-1/2 bg-[#F0ECE1]"></div>
+                        <div className="circ_2 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  top-1/2 -translate-y-1/2 bg-[#F0ECE1]"></div>
+                        <div className="circ_3 scale-90 absolute size-6 z-5 rounded-full -translate-x-1/2 left-1/2  bottom-0 translate-y-1/2 bg-[#F0ECE1]"></div>
+                        <div className=" fill_line w-0.5 translate-x-0.75 bg-[#883F27] h-0"></div>
                     </div>
 
                     {data.map((item, i) => (
                         <div key={i} className={`anim_child_${i + 1} grid grid-cols-3 gap-4 md:gap-0`}>
-                            <div className="col-span-3 md:col-span-1 flex border border-dashed md:h-30 overflow-hidden rounded-xl border-white/20 text-white">
-                                <div className=" num_svg  w-full overflow-hidden shrink-0 bg-[#E3E2DC] center">
-                                    <img src={item.num_img} alt={`Step ${item.id} indicator`} className="h-20 lg:h-auto object-contain" />
+                            <div className="col-span-3 md:col-span-1 flex border border-dashed md:h-30 overflow-hidden rounded-xl border-[#883F27] ">
+                                <div className=" num_svg  w-full overflow-hidden shrink-0 bg-[#883F27] center">
+                                    {/* <img src={item.num_img} alt={`Step ${item.id} indicator`} className="h-20 lg:h-auto object-contain" /> */}
+                                    <p className='text-white font-bold text-7xl'>0{i+1}</p>
                                 </div>
                                 <div className=" h-full flex shrink-0 flex-col  justify-center gap-y-2 px-4 py-3 md:px-5 md:py-0 w-[70%] md:w-auto">
                                     <h5 className='capitalize leading-none text-base md:text-lg'>{item.title}</h5>
                                     <p className='opacity-70 leading-tight text-xs md:text-sm max-w-52 sm:max-w-xs md:w-80'>{item.desc}</p>
                                     <div className="flex flex-wrap gap-1.5 mt-1 md:hidden">
                                         {item.tags.map((tag, i) => (
-                                            <button key={i} className={` tags_btns scale-0 px-3 py-1.5 rounded-full center leading-none h-fit block text-[10px] uppercase border border-transparent ${i % 2 === 0 ? "bg-[#E3E2DC] text-[#883F27]" : "bg-[#883F27] text-[#E3E2DC] border-[#E3E2DC]!"} `}>{tag}</button>
+                                            <button key={i} className={` tags_btns scale-0 px-3 py-1.5 rounded-full center leading-none h-fit block text-[10px] border border-transparent ${tag.type === 'filled' ? "bg-[#883F27] text-[#883F27]" : "bg-transparent text-[#883F27] border-[#883F27]!"} `}>{tag.text}</button>
                                         ))}
                                     </div>
                                 </div>
                             </div>
                             <div className="hidden md:block"></div>
-                            <div className="hidden md:flex col-span-1 flex-wrap px-5 items-center content-center gap-2 border border-dashed  md:h-30 overflow-hidden rounded-xl border-white/20">
+                            <div className="hidden md:flex col-span-1 flex-wrap px-5 items-center content-center gap-2 border border-dashed  md:h-30 overflow-hidden rounded-xl border-[#883F27]">
                                 {item.tags.map((tag, i) => (
-                                    <button key={i} className={` tags_btns scale-0 px-4 py-2 rounded-full center leading-none h-fit block text-sm uppercase border border-transparent ${i % 2 === 0 ? "bg-[#E3E2DC] text-[#883F27]" : "bg-[#883F27] text-[#E3E2DC] border-[#E3E2DC]!"} `}>{tag}</button>
+                                    <button key={i} className={` tags_btns scale-0 px-4 py-2 rounded-full center leading-none h-fit block text-sm border border-transparent ${tag.type === 'filled' ? "bg-[#883F27] text-[#ffffff]" : "bg-transparent text-[#883F27] border-[#883F27]!"} `}>{tag.text}</button>
                                 ))}
                             </div>
                         </div>
@@ -126,10 +143,10 @@ const WorkBehindGrowth = () => {
                 </div>
 
             </div>
-            <div className="md:text-center bg-[#883F27] pt-8 max-sm:px-4">
-                <h2 data-para-effect className='leading-none text-white'>Partners may rotate. I don't.</h2>
+            <div className="md:text-center  pt-8 max-sm:px-4">
+                <h2  className='leading-none '>Partners may rotate. I don't.</h2>
             </div>
-                <div className="w-full h-[60vh] bg-[#883F27] relative">
+                <div className="w-full h-[60vh] relative">
                     <WavePlaneCanvas/>
                 </div>
         </>

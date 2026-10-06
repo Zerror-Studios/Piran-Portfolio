@@ -2,6 +2,10 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/dist/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 
 const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, edgeDists, hasTarget, trailData }) => {
@@ -23,16 +27,19 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
     const onLeave = () => {
       mouseWorld.current.set(9999, 9999, 0);
     };
-    const onScroll = () => {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      if (maxScroll > 0) {
-        scrollProgress.current = Math.min(window.scrollY / (window.innerHeight * 0.8), 1.0);
+    const st = ScrollTrigger.create({
+      trigger: document.body,
+      start: "top top",
+      endTrigger: ".about_section",
+      end: "50% top",
+      //  markers:true,
+      onUpdate: (self) => {
+        scrollProgress.current = self.progress;
       }
-    };
+    });
 
     window.addEventListener('mousemove', onMove);
     window.addEventListener('mouseleave', onLeave);
-    window.addEventListener('scroll', onScroll);
 
     const timeoutId = setTimeout(() => {
       inCenter.current = true;
@@ -41,8 +48,8 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
     return () => {
       window.removeEventListener('mousemove', onMove);
       window.removeEventListener('mouseleave', onLeave);
-      window.removeEventListener('scroll', onScroll);
       clearTimeout(timeoutId);
+      if (st) st.kill();
     };
   }, []);
 
@@ -301,7 +308,7 @@ export default function LogoParticlesNew() {
     const img = new Image();
     img.src = '/logo.svg';
     img.onload = () => {
-      
+
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       const sw = 500;
@@ -417,7 +424,7 @@ export default function LogoParticlesNew() {
         (a, b) => a.x * a.x + a.y * a.y - (b.x * b.x + b.y * b.y),
       );
 
-      
+
       const ambientCount = 0; // Removed ambient particles to stop the circular globe animation
       const total = logoPoints.length + ambientCount;
       const spreadX = 30;
@@ -430,7 +437,7 @@ export default function LogoParticlesNew() {
         });
       }
 
-      
+
       const claimed = new Uint8Array(total);
       const assignment = new Int32Array(total).fill(-1);
 
@@ -454,7 +461,7 @@ export default function LogoParticlesNew() {
         }
       }
 
-      
+
       const NUM_CURVES = 35; // increased to 35 trails
 
       const curves = [];
@@ -466,7 +473,7 @@ export default function LogoParticlesNew() {
         const speed = 0.12 + Math.random() * 0.15;
         const phaseOffset = Math.random() * Math.PI * 2;
         const aspectRatio = 0.6 + Math.random() * 0.8;
-        
+
         // Random center spread broadly across the viewport
         const centerX = (Math.random() - 0.5) * 25.0;
         const centerY = (Math.random() - 0.5) * 15.0;
@@ -500,7 +507,7 @@ export default function LogoParticlesNew() {
         trailCenterArray[i * 3 + 2] = 0;
       }
 
-      
+
       const positions = new Float32Array(total * 3);
       const logoPositions = new Float32Array(total * 3);
       const randomDirsArray = new Float32Array(total * 3);

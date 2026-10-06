@@ -79,3 +79,11 @@
   stroke-dasharray: 6 4;
   animation: moveDash 1s linear infinite;
 }
+
+@keyframes pulseChestnut {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.6); }
+}
+.pulsing-chestnut {
+  animation: pulseChestnut 2.4s ease-in-out infinite;
+}

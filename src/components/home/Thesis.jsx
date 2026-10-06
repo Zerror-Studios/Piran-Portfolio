@@ -1,112 +1,166 @@
 "use client";
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import CustomButton from '../common/CustomButton';
-import ThesisOverlay from './ThesisOverlay';
-import { useThesisStore } from '@/store/useThesisStore';
+
+
 import Image from 'next/image';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Flip } from 'gsap/Flip';
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger, Flip);
 }
 
-const THESIS_IMAGES = [
-    "/images/homepage/partners/full_img_5.JPG",
-  "/images/homepage/partners/full_img.jpg",
-  "/images/homepage/partners/full_img_2.jpg",
-  "/images/homepage/partners/full_img_4.JPG",
-  "/images/homepage/partners/full_img_7.JPG",
-];
-
 const Thesis = () => {
-    const { openThesis } = useThesisStore();
     const containerRef = useRef(null);
-    const imgRef = useRef(null);
-    const [activeImgIndex, setActiveImgIndex] = useState(0);
 
     useGSAP(() => {
         const mm = gsap.matchMedia();
-        // Desktop / Laptop only (min-width: 1024px)
-        mm.add("(min-width: 1024px)", () => {
-            gsap.fromTo(
-                imgRef.current,
-                { y: -200 },
-                {
-                    y: 200,
-                    ease: "none",
-                    scrollTrigger: {
-                        trigger: containerRef.current,
-                        start: "top bottom",
-                        end: "bottom top",
-                        scrub: true,
-                    },
+
+        mm.add("(min-width: 768px)", () => {
+            const stealthTrigger = document.querySelector('.stealth-startup-trigger');
+            const stealthImg = document.querySelector('.stealth-startup-img');
+            const targetImg = document.querySelector('.thesis-target-img');
+            
+            if (!stealthTrigger || !stealthImg || !targetImg || !containerRef.current) return;
+
+            // 1. Visually fit the target image over the Stealth Startup image
+            Flip.fit(targetImg, stealthImg, { scale: true });
+
+            // 2. Capture this small fitted state
+            const smallState = Flip.getState(targetImg);
+            
+            // 3. Clear the inline fit styles so targetImg returns to its native full layout
+            gsap.set(targetImg, { clearProps: "all" });
+
+            // 4. Create the ScrollTrigger for Flip
+            const flipTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: stealthImg,
+                    start: "center center",
+                    endTrigger: containerRef.current,
+                    end: "top top",
+                    scrub: true,
+                    onEnter: () => gsap.set(stealthImg, { opacity: 0 }),
+                    onLeaveBack: () => gsap.set(stealthImg, { opacity: 1 }),
                 }
+            });
+
+            // Flip animates FROM the small state TO its native full layout
+            flipTl.add(Flip.from(smallState, {
+                scale: true,
+                duration: 60,
+                ease: "power1.inOut",
+            }), 0);
+
+            // 5. Create the ScrollTrigger for Sticky Content
+            const contentTl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: containerRef.current,
+                    start: "top top",
+                    end: "bottom bottom",
+                    scrub: true,
+                }
+            });
+
+            // Leaver lines arrive
+            const lines = gsap.utils.toArray('.leaver-line');
+            lines.forEach((line, i) => {
+                const startTime = i * 20;
+                contentTl.fromTo(line, 
+                    { opacity: 0, x: 30 }, 
+                    { opacity: 1, x: 0, duration: 20, ease: "power1.out" }, 
+                    startTime
+                );
+            });
+
+            // lines fade, main title rises
+            contentTl.to('.leaver-line', { opacity: 0, duration: 15, ease: "power1.inOut" }, 60);
+            contentTl.fromTo('.main-thesis-title', 
+                { opacity: 0, y: 40 }, 
+                { opacity: 1, y: 0, duration: 20, ease: "power2.out" }, 
+                65
             );
+
+            // body, ask, button rise
+            contentTl.fromTo('.body-ask',
+                { opacity: 0, y: 40 },
+                { opacity: 1, y: 0, duration: 40, ease: "power2.out" },
+                80
+            );
+
+            
         });
     }, { scope: containerRef });
 
     return (
         <>
-            <div ref={containerRef} className="w-full h-screen md:h-auto md:aspect-square overflow-hidden relative">
-                <div ref={imgRef} className="w-full h-full relative">
-                    {THESIS_IMAGES.map((src, idx) => (
-                        <Image
-                            key={src}
-                            fill
-                            src={src}
-                            className={`cover transition-opacity duration-700 ease-in-out ${
-                                activeImgIndex === idx ? 'opacity-100' : 'opacity-0'
-                            }`}
-                            alt={`Thesis background ${idx + 1}`}
+            {/* Desktop Layout - Using Sticky instead of Pin */}
+            <div ref={containerRef} className="hidden md:block w-full h-[200vh] relative z-50 ">
+                
+                <div className="sticky top-0 w-full h-screen  grid grid-cols-12">
+                    
+                    {/* Image Columns (Left 5) */}
+                    <div className="col-span-5 h-full relative shrink-0">
+                        <img 
+                            src="/images/homepage/partners/full_img_4.JPG"
+                            className="thesis-target-img w-full h-full object-cover "
+                            alt="Thesis"
                         />
-                    ))}
-                </div>
+                    </div>
+                    
+                    {/* Content Columns (Right 7) */}
+                    <div className="col-span-7 h-screen flex flex-col justify-center px-12 xl:px-24 relative">
+                        
+                        {/* Leaver Lines */}
+                        <div className="absolute inset-0 flex flex-col justify-center px-12 xl:px-24 pointer-events-none">
+                            <h4 className="leaver-line opacity-0  leading-tight mb-10 flex items-center">
+                                Consultants leave after the recommendation.
+                            </h4>
+                            <h4 className="leaver-line opacity-0  leading-tight mb-10 flex items-center">
+                                Agencies leave after the deliverable.
+                            </h4>
+                            <h4 className="leaver-line opacity-0  leading-tight mb-10 flex items-center">
+                                Investors show up for board meetings.
+                            </h4>
+                        </div>
 
-                {/* 6 Image Switcher Buttons */}
-                <div className="absolute z-99999 bottom-6 left-[2.5rem] flex items-center gap-2 bg-black/40 backdrop-blur-md px-2 py-2 rounded-full border border-white/20 pointer-events-auto cursor-pointer">
-                    {THESIS_IMAGES.map((_, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => setActiveImgIndex(idx)}
-                            className={`size-8 rounded-full text-xs font-medium transition-all duration-300 flex items-center justify-center ${
-                                activeImgIndex === idx
-                                    ? "bg-white text-[#0B1A2C] shadow-sm scale-110 font-bold"
-                                    : "text-white/70 hover:text-white hover:bg-white/15"
-                            }`}
-                            aria-label={`Switch to image ${idx + 1}`}
-                        >
-                            {idx + 1}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="absolute! z-99 h-fit! top-12 md:top-[10%] text-white container">
-                    <h2 data-para-effect className="">
-                        Nobody stays. <br /> I stay.
-                    </h2>
-                </div>
-
-                <div className="absolute! z-99 h-fit! bottom-12 md:bottom-[10%] space-y-10 md:max-w-xl! right-0 text-white container">
-                    <div className="space-y-4 opacity-70 leading-tight text-xl">
-                        <p data-para-effect>
-                            Consultants leave after the recommendation. Agencies leave after the deliverable. Investors show up for board meetings.
-                        </p>
-                        <p data-para-effect>
-                            Nobody stays. I stay. I come in before the institutions do, usually pre-seed to seed, where positioning is the bottleneck rather than the product.
-                        </p>
-                        <p data-para-effect>
-                            Home ground: wellness, healthcare, and financial services. The ask is simple and documented: strategic equity, agreed before the work begins.
-                        </p>
+                        {/* Main Thesis Content */}
+                        <div className="main-thesis flex flex-col relative z-30">
+                            <div className="main-thesis-title opacity-0">
+                                <h2 className="leading-none mb-8">
+                                    Nobody stays. <br /> I stay. 
+                                </h2>
+                            </div>
+                            
+                            <div className="body-ask opacity-0 space-y-3 max-w-xl text-lg">
+                                <p className="">
+                                    I come in before the institutions do, usually pre-seed to seed, where positioning is the bottleneck rather than the product.
+                                </p>
+                                <p className="italic">
+                                    There are two kinds of backing: the kind that steers you, and the kind that moves with you. Mine is the second.
+                                </p>
+                                <p className="">
+                                    Strategic equity is the default and the anchor, and I earn it by creating value.
+                                </p>
+                                <p className=" pb-6">
+                                    My upside is the founder's upside. I don't extract. I earn.
+                                </p>
+                                
+                               <CustomButton theme='dark' href="/thesis" className="w-fit">
+                                                        Read the full thesis
+                                                    </CustomButton>
+                            </div>
+                        </div>
                     </div>
 
-                    <CustomButton icon='add' onClick={openThesis} className='w-fit'>
-                        Read the full thesis
-                    </CustomButton>
                 </div>
             </div>
-            <ThesisOverlay />
+
+            
+
         </>
     );
 };

@@ -12,7 +12,7 @@ const WorkResult = () => {
     <>
       <div className="relative w-full overflow-hidden">
         <div className="container  pt-8 md:pt-16 relative z-10">
-          <div className="w-full border border-black/20 divide-y divide-black/20">
+          <div className="w-full border border-dashed border-black/20 divide-y divide-black/20">
 
             {/* Card 1: Clarity */}
             <div className="flex flex-col md:grid grid-cols-2 md:h-100 p-6 md:p-8 gap-6 md:gap-8">
@@ -41,7 +41,7 @@ const WorkResult = () => {
                 </div>
                 <div className="space-y-2">
                   <h4 data-para-effect>Execution</h4>
-                  <p className="opacity-70 leading-tight md:w-[70%]">Then we walk it: identity, materials, and systems, built with Point Of and its vetted brand partners.</p>
+                  <p className="opacity-70 leading-tight md:w-[70%]">Then we walk it: identity, materials, and systems, built with vetted brand partners.</p>
                 </div>
               </div>
             </div>

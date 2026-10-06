@@ -2,11 +2,6 @@
 import Image from 'next/image';
 import React, { useState } from 'react';
 
-const STRENGTH_IMAGES = [
-    "/images/aboutpage/piran_4.JPG",
-    "/images/aboutpage/piran.JPG",
-    "/images/aboutpage/piran_2.JPG",
-];
 
 const items = [
     {
@@ -30,7 +25,6 @@ const items = [
 ];
 
 const AboutStrength = () => {
-    const [activeImgIndex, setActiveImgIndex] = useState(0);
 
     return (
         <>
@@ -72,35 +66,14 @@ const AboutStrength = () => {
                             <div
                                 className="relative w-full max-sm:aspect-square md:w-[80%] aspect-square md:aspect-auto min-h-100 overflow-hidden rounded-xl flex items-center justify-center"
                             >
-                                {STRENGTH_IMAGES.map((src, idx) => (
+                             
                                     <Image
-                                        key={src}
                                         fill
-                                        className={`cover transition-opacity duration-700 ease-in-out ${
-                                            activeImgIndex === idx ? 'opacity-100' : 'opacity-0'
-                                        }`}
-                                        src={src}
-                                        alt={`Piran Tarapore ${idx + 1}`}
+                                        className={`cover`}
+                                        src={"/images/aboutpage/piran.JPG"}
+                                        alt={`Piran Tarapore`}
                                     />
-                                ))}
 
-                                {/* 5 Image Switcher Buttons */}
-                                <div className="absolute z-30 bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-black/40 backdrop-blur-md px-2 py-1.5 rounded-full border border-white/20 pointer-events-auto cursor-pointer">
-                                    {STRENGTH_IMAGES.map((_, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => setActiveImgIndex(idx)}
-                                            className={`size-7 rounded-full text-xs font-medium transition-all duration-300 flex items-center justify-center ${
-                                                activeImgIndex === idx
-                                                    ? "bg-white text-[#0B1A2C] shadow-sm scale-110 font-bold"
-                                                    : "text-white/70 hover:text-white hover:bg-white/15"
-                                            }`}
-                                            aria-label={`Switch to image ${idx + 1}`}
-                                        >
-                                            {idx + 1}
-                                        </button>
-                                    ))}
-                                </div>
                             </div>
                         </div>
                     </div>

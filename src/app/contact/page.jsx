@@ -1,17 +1,15 @@
 import { createPageMetadata } from "@/lib/seo";
 import ContactHero from "@/components/contact/ContactHero";
 import FAQ from "@/components/contact/FAQ";
-import ThesisOverlay from "@/components/home/ThesisOverlay";
-import HandParticlesCanvas from "@/components/contact/HandParticlesCanvas";
+import BombayImage from "@/components/contact/BombayImage";
 
 const ContactPage = () => {
   return (
     <>
-      <ContactHero />
-      <HandParticlesCanvas />
-      <FAQ />
-      <ThesisOverlay />
-    </>
+        <ContactHero />
+        <BombayImage/>
+        <FAQ />
+      </>
   );
 };
 

@@ -11,6 +11,7 @@ import ScrollTrigger from "gsap/dist/ScrollTrigger";
 import { useGSAP } from '@gsap/react';
 import { ViewTransitions } from "next-view-transitions";
 import GlobalParaReveal from "../animation/GlobalParaReveal";
+import Navbar from "./Navbar";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -49,12 +50,16 @@ export default function SiteLayout({ children }) {
         <GlobalParaReveal />
 
         <header>
-          <Header />
+        <Navbar/>
         </header>
 
         <main>
           {children}
         </main>
+
+        <footer>
+          <Footer/>
+        </footer>
 
       </LenisScroll>
     </ViewTransitions>
