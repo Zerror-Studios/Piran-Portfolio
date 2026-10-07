@@ -231,11 +231,8 @@ const LogoDotSpreadCanvas = ({
         return -(contentWidth - target.offsetWidth) / 2;
       },
     }, 0)
-      .to(".meet_txt h2", {
+      .to([".meet_txt h2", ".par_res_hed"], {
         color: "#0B1A2C",
-      }, 0)
-      .to(".par_res_hed", {
-        opacity: 70,
       }, 0)
   });
 
@@ -250,11 +247,14 @@ const LogoDotSpreadCanvas = ({
           className="absolute inset-0 w-full h-full pointer-events-none block"
         />
         <div className=" sticky! top-1/2 -translate-y-1/2 w-full  container h-fit!  meet_txt  flex flex-col items-center leading-none ">
-          <h2 className="text-white">Where I</h2>
-          <h2 className="text-white">Come In</h2>
-          <div className="w-full pr-4 md:pr-10 absolute max-sm:space-y-2 md:grid grid-cols-6">
-            <div className=' col-span-4 '></div>
-            <p className='opacity-0 par_res_hed leading-tight col-span-2 text-lg'>Founders rarely call about strategy. They call because something feels misaligned: drift, friction, growth that costs more than it returns. The problem is rarely effort. It's position. The brand never had one to organise around. Finding it is where I come in. </p>
+          <h2 data-para-effect className="text-white opacity-0">Where I</h2>
+          <h2 data-para-effect className="text-white opacity-0">Come In</h2>
+          <div className="w-full padding  absolute max-sm:space-y-2 md:grid grid-cols-6">
+            <div className=' col-span-4 '>
+              <h2 data-para-effect className="text-white">Where I</h2>
+              <h2 data-para-effect className="text-white">Come In</h2>
+            </div>
+            <p data-para-effect  className='text-white par_res_hed leading-tight col-span-2 opacity-70 text-lg'>Founders rarely call about strategy. They call because something feels misaligned: drift, friction, growth that costs more than it returns. The problem is rarely effort. It's position. The brand never had one to organise around. Finding it is where I come in. </p>
           </div>
         </div>
       </div>

@@ -101,7 +101,7 @@ const WorkBehindGrowth = () => {
 
     return (
         <>
-            <div className="container  pt-12 md:pt-24 space-y-8 md:space-y-16">
+            <div className="container  pt-12 md:pt-32 space-y-8 md:space-y-16">
                 <div className="w-full relative z-10 md:text-center">
                     <h2 data-para-effect className='leading-none '>How I Work</h2>
                 </div>

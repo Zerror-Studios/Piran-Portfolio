@@ -10,7 +10,6 @@ import { createPageMetadata } from "@/lib/seo";
 import LogoDotSpreadCanvas from "@/components/home/canvasComponent/LogoDotSpreadCanvas";
 import LogoParticlesNew from "@/components/home/LogoParticlesNew";
 import Portfolio from "@/components/home/Portfolio";
-import OpticalFiber from "@/components/home/OpticalFiber";
 import Resume from "@/components/home/Resume";
 import Testimonials from "@/components/home/Testimonials";
 
@@ -26,8 +25,8 @@ const HomePage = () => {
           {/* <MobileHero /> */}
         </div>
         <About />
-      </div>
       <LogoDotSpreadCanvas colorBg="#0B1A2C" colorDots="#e3e2dc" />
+      </div>
       <WorkResult />
       <WorkBehindGrowth />
       <Portfolio/>

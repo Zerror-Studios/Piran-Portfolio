@@ -175,7 +175,35 @@ export default function StorySlider() {
             className={`relative w-full ${isPrussian ? 'bg-[#0B1A2C] text-[#e3e2dc]' : 'bg-[#e3e2dc] text-[#0B1A2C]'} transition-colors duration-500 h-[600vh]`}
             ref={containerRef}
         >
+            <style>{`
+                @keyframes radialMove {
+                    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+                    50% { transform: translate(-50%, -50%) scale(1.5); opacity: 1; }
+                    100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+                }
+                .animate-radial-blob {
+                    animation: radialMove 12s ease-in-out infinite;
+                }
+                @keyframes bubbleIn {
+                    0% { transform: scale(0.5); opacity: 0; }
+                    60% { transform: scale(1); opacity: 1; }
+                    100% { transform: scale(1); opacity: 1; }
+                }
+                .animate-bubble {
+                    animation: bubbleIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+                }
+            `}</style>
             <div className="sticky top-0 w-full h-screen overflow-hidden flex flex-col justify-center" ref={stickyRef}>
+
+                {/* Animated Radial Background Gradients */}
+                <div className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ease-in-out overflow-hidden ${isPrussian ? 'opacity-100 z-0' : 'opacity-0 -z-10'}`}>
+                    <div className="absolute top-0 left-0 w-[120vw] h-[120vw] md:w-[60vw] md:h-[60vw] animate-radial-blob rounded-full"
+                        style={{ background: 'radial-gradient(circle at center, #1e3a5f 0%, transparent 70%)' }} />
+                </div>
+                <div className={`absolute inset-0 pointer-events-none transition-opacity duration-1000 ease-in-out overflow-hidden ${!isPrussian ? 'opacity-100 z-0' : 'opacity-0 -z-10'}`}>
+                    <div className="absolute top-0 left-0 w-[120vw] h-[120vw] md:w-[60vw] md:h-[60vw] animate-radial-blob rounded-full"
+                        style={{ background: 'radial-gradient(circle at center, #ffffff 0%, transparent 70%)' }} />
+                </div>
 
                 {/* Bottom Nav Line */}
                 <div className="absolute bottom-12 padding w-full z-50">
@@ -227,7 +255,7 @@ export default function StorySlider() {
                                                 return (
                                                     <span
                                                         key={idx}
-                                                        className={`px-4 py-2 rounded-full text-sm font-medium border ${isOrange ? 'bg-[#954729] border-[#954729] text-white' : 'bg-white/10 border-white/20 text-white'}`}
+                                                        className={`px-4 py-2 rounded-full text-sm font-medium border transition-all duration-300 ${isOrange ? 'bg-[#954729] border-[#954729] text-white' : 'bg-white/10 border-white/20 text-white'} `}
                                                     >
                                                         {value}
                                                     </span>

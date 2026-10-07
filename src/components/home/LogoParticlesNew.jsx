@@ -31,7 +31,7 @@ const ParticleSystem = ({ gridPositions, logoPositions, randomDirs, orbitData, e
       trigger: document.body,
       start: "top top",
       endTrigger: ".about_section",
-      end: "50% top",
+      end: "bottom top",
       //  markers:true,
       onUpdate: (self) => {
         scrollProgress.current = self.progress;

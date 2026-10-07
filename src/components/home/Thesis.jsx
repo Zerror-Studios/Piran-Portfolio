@@ -100,22 +100,22 @@ const Thesis = () => {
             {/* Desktop Layout - Using Sticky instead of Pin */}
             <div ref={containerRef} className="hidden md:block w-full h-[200vh] relative z-50 ">
                 
-                <div className="sticky top-0 w-full h-screen  grid grid-cols-12">
+                <div className="sticky top-0 w-full h-screen">
                     
                     {/* Image Columns (Left 5) */}
-                    <div className="col-span-5 h-full relative shrink-0">
+                    <div className="w-full h-full relative shrink-0">
                         <img 
                             src="/images/homepage/partners/full_img_4.JPG"
-                            className="thesis-target-img w-full h-full object-cover "
+                            className="thesis-target-img w-full h-full object-cover object-[50%_30%]"
                             alt="Thesis"
                         />
                     </div>
                     
                     {/* Content Columns (Right 7) */}
-                    <div className="col-span-7 h-screen flex flex-col justify-center px-12 xl:px-24 relative">
+                    <div className="absolute h-screen flex flex-col justify-center padding top-0 left-0 text-white z-10">
                         
                         {/* Leaver Lines */}
-                        <div className="absolute inset-0 flex flex-col justify-center px-12 xl:px-24 pointer-events-none">
+                        <div className="absolute inset-0 flex flex-col justify-center padding pointer-events-none">
                             <h4 className="leaver-line opacity-0  leading-tight mb-10 flex items-center">
                                 Consultants leave after the recommendation.
                             </h4>

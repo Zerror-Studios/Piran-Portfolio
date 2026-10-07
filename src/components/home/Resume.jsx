@@ -18,11 +18,11 @@ const Resume = () => {
             <div className="  w-full pt-12 md:pt-24  h-fit! bg-[#e3e2dc] z-100  relative leading-none ">
                 <div
                     className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
-                    style={{ opacity: activeIndex === 0 ? 1 : 0, background: 'radial-gradient(100% 100% at 50% 100%, #C9BFA6 0%, #DAD2BE 40%, #E7E0D0 70%, #E3E2DC 100%)' }}
-                />
+                    style={{ opacity: activeIndex === 0 ? 1 : 0, background: 'radial-gradient(100% 100% at 50% 100%, #C9D1D9 0%, #E1E6EA 40%, #F8F6EF 70%, #E3E2DC 100%)' }}
+                    />
                 <div
                     className="absolute inset-0 transition-opacity duration-1000 ease-in-out"
-                    style={{ opacity: activeIndex === 1 ? 1 : 0, background: 'radial-gradient(100% 100% at 50% 100%, #C9D1D9 0%, #E1E6EA 40%, #F8F6EF 70%, #E3E2DC 100%)' }}
+                    style={{ opacity: activeIndex === 1 ? 1 : 0, background: 'radial-gradient(100% 100% at 50% 100%, #C9BFA6 0%, #DAD2BE 40%, #E7E0D0 70%, #E3E2DC 100%)' }}
                 />
                 <div
                     className="absolute inset-0 transition-opacity duration-1000 ease-in-out"

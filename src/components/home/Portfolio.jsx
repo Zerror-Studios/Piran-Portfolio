@@ -67,8 +67,12 @@ const Portfolio = () => {
 
     return (
         <section className="bg-[#e3e2dc] text-[#0b1a2c] py-12 md:py-24 space-y-8 md:space-y-16 container relative">
-            <div className="w-full center ">
-                <h2 data-para-effect className="">The Portfolio</h2>
+
+            <div className="w-full max-sm:space-y-2 md:grid grid-cols-6">
+                <div className=' col-span-4 '>
+                    <h3 data-para-effect className="">The Portfolio</h3>
+                </div>
+                <p className='  leading-tight col-span-2 opacity-70 text-lg'>A curated selection of brands and businesses I've partnered with to build strategy, position, and long-term growth.</p>
             </div>
 
             <div className=" relative grid grid-cols-3">
@@ -89,46 +93,40 @@ const Portfolio = () => {
                                 >
                                     <div className="flex items-center gap-3">
                                         <div className="relative flex items-center">
-                                            <h2 className={` uppercase  leading-none grotesk whitespace-nowrap`}>{item.name}</h2>
+                                            <h3 className={` uppercase  leading-none grotesk whitespace-nowrap`}>{item.name}</h3>
                                             {item.id === 'naturefit' && (
                                                 <div className={`absolute bottom-0 rounded-full left-0 h-0.5 bg-[#0b1a2c] transition-all duration-300 ${isHovered ? 'w-full' : 'w-0'}`} />
                                             )}
                                         </div>
-
-                                        <span className="w-32 text-xs">
+                                        <span className=" pr-5 text-xs">
                                             {item.noteTitle}
                                         </span>
-
-
                                     </div>
                                 </div>
                             );
                         })}
                     </div>
                     <div className="flex gap-x-4 mt-4 stealth-startup-trigger">
-                        <img className='w-50 stealth-startup-img' src="/images/homepage/partners/full_img_4.JPG" alt="" />
+                        <img className='h-48 aspect-video object-top stealth-startup-img' src="/images/homepage/partners/full_img_4.JPG" alt="" />
                         <div className="flex flex-col justify-between">
                             <div className="">
-
                                 <div className="flex">
-                                    <h2 className={` uppercase  leading-none grotesk whitespace-nowrap`}>STEALTH STARTUP </h2>
+                                    <h3 className={` uppercase  leading-none grotesk whitespace-nowrap`}>STEALTH STARTUP </h3>
                                     <div className="ml-1 size-1.5 bg-[#883F27] rounded-full pulsing-chestnut shrink-0" />
                                 </div>
                                 <span className="w-32 ">
                                     <>Founder, 2026</>
                                 </span>
                             </div>
-
                             <p className='w-72 text-lg leading-tight'>
                                 Can AI help us keep the people we meet? I'm finding out. The name arrives only when it's ready.
                             </p>
-
                         </div>
                     </div>
                 </div>
 
                 {/* Dynamic Line Area */}
-                <div key={activeItem.id} className=" fade-in col-span-1 text-center flex flex-col items-center justify-center transition-all duration-700">
+                <div key={activeItem.id} className=" fade-in col-span-1  flex flex-col justify-center transition-all duration-700">
                     <p className=" text-2xl">{activeItem.line}</p>
                     {activeItem.linkText && (
                         activeItem.linkExternal ? (

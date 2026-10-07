@@ -32,13 +32,14 @@ type OpticalFiberProps = {
 };
 
 const THEME_HEX = {
-  sunrise: {
+  daytime: {
+
     lineStart: "#374F68",
     lineEnd: "#4B6681",
     dots: "#374F68",
     point: "#954729",
   },
-  daytime: {
+  sunrise: {
     lineStart: "#18293A",
     lineEnd: "#4B6681",
     dots: "#18293A",
@@ -86,31 +87,6 @@ function hexToRgba(hex: string, alpha: number) {
   return `rgba(${Math.round(r * 255)}, ${Math.round(g * 255)}, ${Math.round(b * 255)}, ${alpha})`;
 }
 
-const NETWORK_LOGOS = Array.from(
-  { length: 15 },
-  (_, i) => `/images/marquee/logo (${i + 1}).png`,
-);
-const MAX_TIP_LOGOS = 8;
-const LOGO_SIZE_MIN = 52;
-const LOGO_SIZE_MAX = 72;
-const MIN_SCREEN_GAP = 0.72;
-const MIN_TIP_LENGTH = 0.28;
-const VIEWPORT_MARGIN = 28;
-
-type LogoTraveler = {
-  el: HTMLImageElement;
-  fiberIndex: number;
-  logoSrc: string;
-  life: number;
-  maxLife: number;
-  fadeIn: number;
-  fadeOut: number;
-  size: number;
-  screenX: number;
-  screenY: number;
-  offScreenTime: number;
-};
-
 export default function OpticalFiber({
   className = "",
   contentScale = 1,
@@ -128,7 +104,6 @@ export default function OpticalFiber({
 }: OpticalFiberProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const logosLayerRef = useRef<HTMLDivElement>(null);
   const whiteGlowRef = useRef<HTMLDivElement>(null);
 
   const themeRef = useRef(theme);
@@ -139,8 +114,7 @@ export default function OpticalFiber({
   useEffect(() => {
     const container = containerRef.current;
     const canvas = canvasRef.current;
-    const logosLayer = logosLayerRef.current;
-    if (!container || !canvas || !logosLayer) return;
+    if (!container || !canvas) return;
 
     const scene = new THREE.Scene();
 
@@ -432,134 +406,6 @@ export default function OpticalFiber({
     visibilityObserver.observe(container);
 
     const _end = new THREE.Vector3();
-    const _tipWorld = new THREE.Vector3();
-    const logoTravelers: LogoTraveler[] = [];
-    let spawnCooldown = 0;
-    let initialFillDone = false;
-
-    const projectFiberTip = (fiberIndex: number, width: number, height: number) => {
-      _tipWorld.set(
-        dotPositions[fiberIndex * 3],
-        dotPositions[fiberIndex * 3 + 1],
-        dotPositions[fiberIndex * 3 + 2],
-      );
-      content.localToWorld(_tipWorld);
-      _tipWorld.project(camera);
-      if (_tipWorld.z > 1 || width === 0 || height === 0) return null;
-      return {
-        x: (_tipWorld.x * 0.5 + 0.5) * width,
-        y: (-_tipWorld.y * 0.5 + 0.5) * height,
-      };
-    };
-
-    const getOnScreenFiberTips = (width: number, height: number) => {
-      const tips: { index: number; x: number; y: number }[] = [];
-
-      for (let i = 0; i < LINE_COUNT; i++) {
-        if (fibers[i].lengthT < MIN_TIP_LENGTH) continue;
-
-        const screenPos = projectFiberTip(i, width, height);
-        if (!screenPos) continue;
-
-        if (
-          screenPos.x < VIEWPORT_MARGIN ||
-          screenPos.x > width - VIEWPORT_MARGIN ||
-          screenPos.y < VIEWPORT_MARGIN ||
-          screenPos.y > height - VIEWPORT_MARGIN
-        ) {
-          continue;
-        }
-
-        tips.push({ index: i, x: screenPos.x, y: screenPos.y });
-      }
-
-      return tips;
-    };
-
-    const fillLogoSlots = () => {
-      for (let i = 0; i < MAX_TIP_LOGOS * 8 && logoTravelers.length < MAX_TIP_LOGOS; i++) {
-        spawnLogoTraveler();
-      }
-    };
-
-    const isSpawnSlotClear = (
-      size: number,
-      screenPos: { x: number; y: number },
-    ) => {
-      for (const traveler of logoTravelers) {
-        const minDist = ((traveler.size + size) / 2) * MIN_SCREEN_GAP;
-        if (Math.hypot(screenPos.x - traveler.screenX, screenPos.y - traveler.screenY) < minDist) {
-          return false;
-        }
-      }
-      return true;
-    };
-
-    const pickLogoSrc = () => {
-      const active = new Set(logoTravelers.map((t) => t.logoSrc));
-      const available = NETWORK_LOGOS.filter((src) => !active.has(src));
-      const pool = available.length ? available : NETWORK_LOGOS;
-      return pool[Math.floor(Math.random() * pool.length)];
-    };
-
-    const spawnLogoTraveler = () => {
-      if (logoTravelers.length >= MAX_TIP_LOGOS) return;
-
-      content.updateMatrixWorld(true);
-      const width = container.clientWidth;
-      const height = container.clientHeight;
-      if (!width || !height) return;
-
-      const size = LOGO_SIZE_MIN + Math.random() * (LOGO_SIZE_MAX - LOGO_SIZE_MIN);
-      const onScreenTips = getOnScreenFiberTips(width, height);
-      if (!onScreenTips.length) return;
-
-      let chosenFiber = -1;
-      let chosenPos: { x: number; y: number } | null = null;
-
-      const shuffled = onScreenTips
-        .map((tip) => ({ tip, sort: Math.random() }))
-        .sort((a, b) => a.sort - b.sort)
-        .map(({ tip }) => tip);
-
-      for (const tip of shuffled) {
-        if (!isSpawnSlotClear(size, tip)) continue;
-        chosenFiber = tip.index;
-        chosenPos = { x: tip.x, y: tip.y };
-        break;
-      }
-
-      if (chosenFiber < 0 || !chosenPos) return;
-
-      const logoSrc = pickLogoSrc();
-      const img = document.createElement("img");
-      img.src = logoSrc;
-      img.alt = "";
-      img.draggable = false;
-      img.className =
-        "pointer-events-none absolute select-none will-change-[left,top,opacity,transform] brightness-0 invert";
-      img.style.width = `${size}px`;
-      img.style.height = "auto";
-      img.style.left = `${chosenPos.x}px`;
-      img.style.top = `${chosenPos.y}px`;
-      img.style.opacity = "0";
-      img.style.transform = "translate(-50%, -50%)";
-      logosLayer.appendChild(img);
-
-      logoTravelers.push({
-        el: img,
-        fiberIndex: chosenFiber,
-        logoSrc,
-        life: 0,
-        maxLife: 5.5 + Math.random() * 2.5,
-        fadeIn: 0.22 + Math.random() * 0.12,
-        fadeOut: 0.75 + Math.random() * 0.35,
-        size,
-        screenX: chosenPos.x,
-        screenY: chosenPos.y,
-        offScreenTime: 0,
-      });
-    };
 
     const THEMES = buildThemes();
     const currentColors = {
@@ -684,74 +530,6 @@ export default function OpticalFiber({
       dotGeo.attributes.position.needsUpdate = true;
       dotGeo.attributes.color.needsUpdate = true;
 
-      if (!reducedMotion) {
-        const width = container.clientWidth;
-        const height = container.clientHeight;
-
-        if (!initialFillDone && width > 0 && height > 0) {
-          initialFillDone = true;
-          fillLogoSlots();
-        }
-
-        if (logoTravelers.length < MAX_TIP_LOGOS) {
-          spawnCooldown -= delta;
-          if (spawnCooldown <= 0) {
-            spawnLogoTraveler();
-            spawnCooldown = 0.12 + Math.random() * 0.18;
-          }
-        } else {
-          spawnCooldown = 0.12;
-        }
-
-        content.updateMatrixWorld(true);
-
-        const frameWidth = container.clientWidth;
-        const frameHeight = container.clientHeight;
-
-        for (let j = logoTravelers.length - 1; j >= 0; j--) {
-          const traveler = logoTravelers[j];
-          traveler.life += delta;
-
-          const projected = projectFiberTip(traveler.fiberIndex, frameWidth, frameHeight);
-
-          if (!projected) {
-            traveler.offScreenTime += delta;
-            traveler.el.style.opacity = "0";
-            if (traveler.offScreenTime > 0.35) {
-              traveler.el.remove();
-              logoTravelers.splice(j, 1);
-              continue;
-            }
-          } else {
-            traveler.offScreenTime = 0;
-            traveler.screenX = projected.x;
-            traveler.screenY = projected.y;
-
-            let opacity = 0;
-            if (traveler.life < traveler.fadeIn) {
-              opacity = traveler.life / traveler.fadeIn;
-            } else if (traveler.life > traveler.maxLife - traveler.fadeOut) {
-              opacity = Math.max(0, (traveler.maxLife - traveler.life) / traveler.fadeOut);
-            } else {
-              opacity = 1;
-            }
-
-            const breathe =
-              0.94 + Math.sin(t * 2.4 + traveler.fiberIndex * 0.35) * 0.06;
-
-            traveler.el.style.left = `${traveler.screenX}px`;
-            traveler.el.style.top = `${traveler.screenY}px`;
-            traveler.el.style.opacity = String(opacity * 0.92);
-            traveler.el.style.transform = `translate(-50%, -50%) scale(${breathe})`;
-          }
-
-          if (traveler.life >= traveler.maxLife) {
-            traveler.el.remove();
-            logoTravelers.splice(j, 1);
-          }
-        }
-      }
-
       if (originGlow && glowSprite && innerSprite) {
         const pulse = 0.9 + Math.sin(t * 1.4) * 0.1;
         glowSprite.scale.set(5 * pulse, 5 * pulse, 1);
@@ -778,8 +556,6 @@ export default function OpticalFiber({
       container.removeEventListener("mouseleave", onMouseLeave);
       resizeObserver.disconnect();
       visibilityObserver.disconnect();
-      logoTravelers.forEach((traveler) => traveler.el.remove());
-      logoTravelers.length = 0;
       renderer.dispose();
     };
   }, [contentScale, fanSpread, fanReach, fov, fanHeight, fanOffsetX, color, originGlow, bloomOnScroll, bloomGlow]);
@@ -810,11 +586,6 @@ export default function OpticalFiber({
         />
       ) : null}
       <canvas ref={canvasRef} className="relative z-10 block h-full w-full" aria-hidden />
-      <div
-        ref={logosLayerRef}
-        className="pointer-events-none absolute inset-0 z-20 overflow-hidden"
-        aria-hidden
-      />
     </div>
   );
 }
