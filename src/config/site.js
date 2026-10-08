@@ -1,6 +1,6 @@
 export const siteConfig = {
   name: "Piran Tarapore",
-  description: "Brand architect and strategic catalyst. Strategy first, equity where the alignment runs deep, from zero to one and long after.",
+  description: "Brand architect to early-stage founders. Strategy first, equity where the alignment runs deep, from zero to one and long after.",
   url: "https://pirantee.com",
   locale: "en_IN",
   language: "en-IN",

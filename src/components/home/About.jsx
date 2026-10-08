@@ -143,7 +143,7 @@ const About = () => {
                         <h2 data-para-effect className=''> <span className=' intro_txt_prev'>Backing founders.</span></h2>
                     </div>
                     <div className="text-white int_hd">
-                        <h2 className=''> <span className=' intro_txt_a intro_txt opacity-0'>MEET</span> <span className='intro_txt opacity-0'>PIRAN</span></h2>
+                        <h2 className=''> <span className=' intro_txt_a intro_txt opacity-0'>Meet</span> <span className='intro_txt opacity-0'>Piran</span></h2>
                         <div className="intro_txt opacity-0">
                             <p className='text-lg italic  opacity-70'>Brand architect to early-stage founders</p>
                         </div>
@@ -159,7 +159,7 @@ const About = () => {
                     </div>
 
                     <div className="w-full container absolute! space-y-12 text-white inset-0 h-full center flex-col">
-                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_1'>In service of that, founded Point Of, the independent consultancy behind 170+ brands across five continents.</h4>
+                        <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_1'>In service of that, he founded Point Of, the independent consultancy behind 170+ brands across five continents.</h4>
                         <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_2'>Where the alignment runs deep, he invests: strategic equity in the brands he builds with, and positions in the businesses he believes in.</h4>
                         <h4 className=' md:w-[70%] mx-auto z-10 opacity-0 abt_txt_3'>Piran is dedicated to the long game: work that means something, people who grow together, and things built carefully enough to last.</h4>
                     </div>

@@ -22,7 +22,7 @@ const WorkResult = () => {
                 </div>
                 <div className="space-y-2">
                   <h4 data-para-effect>Clarity</h4>
-                  <p className="opacity-70 leading-tight md:w-[70%]">We start by finding where you actually stand, then map the route to where you're headed.</p>
+                  <p className="opacity-70 leading-tight md:w-[70%]">We start by finding where you actually stand, then map the route to where you're headed. </p>
                 </div>
               </div>
               <div className="h-48 md:h-full w-full">

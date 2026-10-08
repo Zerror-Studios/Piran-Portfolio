@@ -254,7 +254,11 @@ const LogoDotSpreadCanvas = ({
               <h2 data-para-effect className="text-white">Where I</h2>
               <h2 data-para-effect className="text-white">Come In</h2>
             </div>
-            <p data-para-effect  className='text-white par_res_hed leading-tight col-span-2 opacity-70 text-lg'>Founders rarely call about strategy. They call because something feels misaligned: drift, friction, growth that costs more than it returns. The problem is rarely effort. It's position. The brand never had one to organise around. Finding it is where I come in. </p>
+            <div className="col-span-2">
+
+            <p data-para-effect  className='text-white par_res_hed leading-tight  opacity-70 text-lg'>Founders rarely call about strategy. They call because something feels misaligned: drift, friction, growth that costs more than it returns. The problem is rarely effort. It's position. The brand never had one to organise around. Finding it is where I come in. </p>
+            <p data-para-effect  className='text-white par_res_hed mt-4 leading-tight  opacity-70 text-lg'>Clarity first, execution always, and backing when the relationship earns it on both sides.</p>
+            </div>
           </div>
         </div>
       </div>
