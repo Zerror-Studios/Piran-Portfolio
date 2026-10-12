@@ -361,7 +361,10 @@ const MoonGlobe = () => {
             
             // Warm diffuse lighting with slight ambient
             vec3 finalColor = baseColor * (diff * 0.65 + 0.4);
-            
+
+            // Push the whole surface 40% toward white
+            finalColor = mix(finalColor, vec3(1.0), 0.4);
+
             // ── Hairline edge ──
             float facing = max(dot(vNormal, vec3(0.0, 0.0, 1.0)), 0.0);
             float rim = 1.0 - facing;

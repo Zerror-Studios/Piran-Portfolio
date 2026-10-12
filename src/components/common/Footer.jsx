@@ -47,12 +47,12 @@ const Footer = () => {
   }
 
   return (
-    <div className="w-full min-h-screen bg-[#883F27] text-white relative flex flex-col z-100 overflow-hidden">
+    <div  className="w-full bg-[#883F27] text-white relative flex flex-col z-[10000000] overflow-hidden">
       <div className="absolute  w-full h-full inset-0">
         <Image width={1920} height={1080} className='cover' src="/images/footer_bg.png" alt="" />
       </div>
       {/* Top Section: CTA & Ask AI Box - Centered vertically in available space */}
-      <div className="container flex-1 flex flex-col justify-center py-16 md:py-0">
+      <div className="container relative z-10 flex flex-col pt-12 md:pt-24">
         <div className="flex flex-col md:flex-row justify-between  w-full gap-y-16 md:gap-y-0">
 
           {/* Left: CTA */}
@@ -65,7 +65,7 @@ const Footer = () => {
             <p key={pathname} data-para-effect className={`leading-none ${pathname === '/thesis' ? 'text-4xl max-w-xl' : 'text-6xl'}`}>
               {heading}
             </p>
-            <CustomButton href={btnHref}>
+            <CustomButton href={btnHref} uppercase={!is404}>
               {btnText}
             </CustomButton>
           </div>
@@ -127,7 +127,7 @@ const Footer = () => {
       </div>
 
       {/* Bottom Section: Info and Links */}
-      <div className="container relative z-10 space-y-6 md:space-y-6 pb-6 md:pb-12 pt-16 md:pt-0">
+      <div className="container relative z-10 space-y-5 pt-12 md:pt-24 pb-5">
         <div className="flex flex-col md:grid md:grid-cols-8 gap-y-8 md:gap-y-0">
           <div className="col-span-8 md:col-span-6 md:space-y-6">
             <RotatingText />
@@ -143,7 +143,7 @@ const Footer = () => {
             </p>
           </div>
 
-          <div className="col-span-8 md:col-span-2 grid grid-cols-2 gap-4 text-sm md:text-base mt-4 md:mt-0">
+          <div className="col-span-8 md:col-span-2 grid grid-cols-2  text-sm md:text-base mt-4 md:mt-0">
             <div className="flex md:justify-end">
               <div className="flex flex-col gap-3 font-medium">
                 <Link href="/" className="group flex items-center gap-2 hover:opacity-100 opacity-80 transition-opacity">
@@ -157,6 +157,10 @@ const Footer = () => {
                 <Link href="/contact" className="group flex items-center gap-2 hover:opacity-100 opacity-80 transition-opacity">
                   <div className="size-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div>
                   Contact
+                </Link>
+                <Link href="/thesis" className="group flex items-center gap-2 hover:opacity-100 opacity-80 transition-opacity">
+                  <div className="size-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 bg-white rounded-full"></div>
+                  The Thesis
                 </Link>
               </div>
             </div>
@@ -175,12 +179,12 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="w-full border border-dashed border-white/20 my-6 md:my-8"></div>
+        <div className="w-full border border-dashed border-white/20 "></div>
 
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center text-sm gap-y-4 md:gap-y-0">
           <p className='opacity-70'>© Piran Tarapore, {new Date().getFullYear()}. All rights reserved.</p>
           <Link href={"https://www.wearepointof.com"} target='_blank' className='group opacity-70 hover:opacity-100 transition-opacity duration-150'>
-            <p>An experience by <span className='group-hover:underline'>Point Of.</span></p>
+            <p>An experience by <span className='group-hover:underline'>Point Of</span></p>
           </Link>
         </div>
       </div>

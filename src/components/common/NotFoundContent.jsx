@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useRef, useEffect } from "react";
-import { Link } from "next-view-transitions";
 import gsap from "gsap";
 import ContactNextBackground from "@/components/contact/ContactNextBackground";
+import CustomButton from "@/components/common/CustomButton";
 
-export default function NotFound() {
+export default function NotFoundContent() {
   const containerRef = useRef(null);
   const buttonRef = useRef(null);
   const wordsRef = useRef([]);
@@ -140,7 +140,9 @@ export default function NotFound() {
     <div ref={containerRef} className="w-full h-screen bg-[#0b1a2c] flex flex-col justify-between p-8 md:p-12 overflow-hidden text-[#e3e2dc]">
       <ContactNextBackground />
       <div className="pt-4 z-10 relative">
-        <h1 className="text-lg md:text-xl font-medium opacity-0">404 page</h1>
+        <h1 className="text-lg md:text-xl font-medium pointer-events-none opacity-0">
+          <span className="">404</span> Page not found
+        </h1>
       </div>
 
       <div className="flex-1 center flex-col pointer-events-none" style={{ perspective: "1200px" }}>
@@ -158,14 +160,13 @@ export default function NotFound() {
         </div>
       </div>
 
-      <div className="pb-8 center z-10 relative">
-        <Link
-          href="/"
-          ref={buttonRef}
-          className="group relative flex items-center gap-3 text-lg  font-medium transition-all duration-300"
-        >
-          <span className="hover:underline uppercase">Begin </span>
-        </Link>
+      <div className="pb-8 center z-10 uppercase relative">
+        {/* Wrapper carries the ref the word-assembly proximity check measures */}
+        <div ref={buttonRef}>
+          <CustomButton href="/" uppercase={false}>
+            Begin again
+          </CustomButton>
+        </div>
       </div>
     </div>
   );

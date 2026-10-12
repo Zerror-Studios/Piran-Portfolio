@@ -22,17 +22,23 @@ const HomePage = () => {
         </div>
         <div className="-mt-[100vh]">
           <Hero />
-          {/* <MobileHero /> */}
+        </div>
+        <div className="padding relative z-10  text-white space-y-5">
+          <p data-para-effect className=" text-lg max-w-100 leading-tight">
+            The world is starting more companies than it can remember. Plenty find a first customer, and far fewer live to see a tenth birthday.
+          </p>
+          <p data-para-effect className=" text-lg max-w-100 leading-tight">
+            Launching takes a product. Lasting takes everything around it: the position it holds, the partners it keeps, and the capital that believes in it.
+          </p>
         </div>
         <About />
-      <LogoDotSpreadCanvas colorBg="#0B1A2C" colorDots="#e3e2dc" />
+        <LogoDotSpreadCanvas colorBg="#0B1A2C" colorDots="#e3e2dc" />
       </div>
       <WorkResult />
       <WorkBehindGrowth />
-      <Portfolio/>
+      <Portfolio />
       <Thesis />
-      <Resume/>
-      <Testimonials/>
+      <Resume />
     </>
   );
 };

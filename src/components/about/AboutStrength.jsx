@@ -38,7 +38,7 @@ const AboutStrength = () => {
                                     Strengths & Still <br /> Working On
                                 </h2>
                                 <p data-para-effect className="text-white/60 leading-tight">
-                                    Building trust requires showing the blueprint, including the stress-points. These are the pillars of the practice and the areas currently undergoing reinforcement.
+                                    These are the pillars of the practice and the areas currently undergoing reinforcement.
                                 </p>
                             </div>
 
@@ -66,13 +66,13 @@ const AboutStrength = () => {
                             <div
                                 className="relative w-full max-sm:aspect-square md:w-[80%] aspect-square md:aspect-auto min-h-100 overflow-hidden rounded-xl flex items-center justify-center"
                             >
-                             
-                                    <Image
-                                        fill
-                                        className={`cover`}
-                                        src={"/images/aboutpage/piran.JPG"}
-                                        alt={`Piran Tarapore`}
-                                    />
+
+                                <Image
+                                    fill
+                                    className={`cover`}
+                                    src={"/images/aboutpage/piran.JPG"}
+                                    alt={`Piran Tarapore`}
+                                />
 
                             </div>
                         </div>

@@ -103,7 +103,7 @@ export default function StorySlider() {
     // Mobile layout
     if (isMobile) {
         return (
-            <div className="w-full  pt-24 pb-32">
+            <div data-hide-header className="w-full  pt-24 pb-32">
                 <div className="sticky top-0 w-full  z-50 py-4 border-b border-black/10 px-6">
                     <div className="flex items-center justify-between">
                         {CHAPTERS.map((ch, i) => (
@@ -172,6 +172,7 @@ export default function StorySlider() {
 
     return (
         <div
+        data-hide-header
             className={`relative w-full ${isPrussian ? 'bg-[#0B1A2C] text-[#e3e2dc]' : 'bg-[#e3e2dc] text-[#0B1A2C]'} transition-colors duration-500 h-[600vh]`}
             ref={containerRef}
         >

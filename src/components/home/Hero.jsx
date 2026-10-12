@@ -5,13 +5,12 @@ import { VideoWebGLTransition } from './canvasComponent/VideoWebGLTransition';
 
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/dist/ScrollTrigger'
-import SplitText from 'gsap/dist/SplitText'
 import { useGSAP } from '@gsap/react';
 import Image from 'next/image';
 import { RotatingText } from '../common/RotatingText';
 import { LiveTime } from '../common/LiveTime';
 import LogoParticlesNew from './LogoParticlesNew';
-gsap.registerPlugin(ScrollTrigger, SplitText)
+gsap.registerPlugin(ScrollTrigger)
 
 const Hero = () => {
   const videoThumbRef = useRef(null);
@@ -75,20 +74,7 @@ const Hero = () => {
   };
 
   useGSAP(() => {
-    const paragraph_split = SplitText.create(".paragraph_split", {
-      type: "lines",
-      linesClass: "split-line",
-      aria: "none"
-    });
-
-    [...paragraph_split.lines].forEach((line) => {
-      const wrapper = document.createElement("div");
-      wrapper.classList.add("line-wrapper");
-      line.parentNode.insertBefore(wrapper, line);
-      wrapper.appendChild(line);
-    });
-
-    gsap.set([".txt2_head", paragraph_split.lines], { yPercent: 100 });
+    gsap.set(".txt2_head", { yPercent: 100 });
 
     const masterTl = gsap.timeline({ delay: 2.5 });
 
@@ -97,19 +83,19 @@ const Hero = () => {
       duration: 0.01
     });
 
-    masterTl.to([".txt2_head", paragraph_split.lines], {
+    masterTl.to(".txt2_head", {
       yPercent: 0,
       duration: 0.8,
       ease: "expo.out",
       stagger: 0.05,
     }, "<+0.2");
-    masterTl.to([".txt2_head"], {
+    masterTl.to(".txt2_head", {
       transform: "translateX(0)",
       stagger: 0.15,
       duration: 1,
       ease: "power2.inOut"
     });
-    masterTl.to([".vid_cont"], {
+    masterTl.to(".vid_cont", {
       opacity: 1,
     }, ">");
 
@@ -136,15 +122,7 @@ const Hero = () => {
           </h1>
         </div>
 
-        <div className='w-full flex justify-between items-end'>
-          <div className=" w-fit space-y-5">
-            <p className=" paragraph_split opacity-60 leading-tight">
-              The world is starting more companies than it can remember. <br /> Plenty find a first customer, and far fewer live to see a tenth birthday.
-            </p>
-            <p className=" paragraph_split opacity-60 leading-tight">
-              Launching takes a product. Lasting takes everything around it: <br /> the position it holds, the partners it keeps, and the capital that believes in it.
-            </p>
-          </div>
+        <div className='w-full flex justify-end items-end'>
           <div className=" vid_cont opacity-0  relative w-72 aspect-video">
             <div
               ref={videoThumbRef}

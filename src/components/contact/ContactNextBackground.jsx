@@ -15,17 +15,14 @@ const ContactNextBackground = () => {
 
     // Configuration
     const CONFIG = {
-        maxNodes: 300,
         spawnDistance: 40,        // px of travel before spawning a new point
         connectionDistance: 120,  // max distance to connect to nearby points
         maxConnectionsPerNode: 3, // 1 to 3 connections
         lineDrawDuration: 600,    // ms to draw hairline
-        nodeLifespan: 6000,       // ms to live before fading out
-        nodeFadeTime: 1000,       // ms to linearly fade out
         nodeFadeInTime: 400,      // ms to fade in new points
         dotSize: 3,               // radius of points
-        baseDotAlpha: 0.15,       // 15% alabaster
-        baseLineAlpha: 0.10,      // 10% alabaster
+        baseDotAlpha: 0.5,       // 15% alabaster
+        baseLineAlpha: 0.20,      // 10% alabaster
         color: '242, 240, 230',   // Alabaster-ish white (rgb)
     };
 
@@ -35,10 +32,7 @@ const ContactNextBackground = () => {
             x,
             y,
             born: performance.now(),
-            alpha: 0,
-            fadingOut: false,
-            fadeStart: 0,
-            connections: 0
+            baked: false,
         };
     }, []);
 
@@ -49,16 +43,53 @@ const ContactNextBackground = () => {
         if (!canvas || !container) return;
 
         const ctx = canvas.getContext('2d');
+        // Finished points and lines are drawn once onto this layer and stay there permanently
+        const bakeCanvas = document.createElement('canvas');
+        const bakeCtx = bakeCanvas.getContext('2d');
+        const nodeMap = new Map(nodesRef.current.map((n) => [n.id, n]));
+        let width = 0;
+        let height = 0;
         let destroyed = false;
+
+        const drawLine = (c, a, b, progress, alpha) => {
+            c.beginPath();
+            c.moveTo(a.x, a.y);
+            c.lineTo(a.x + (b.x - a.x) * progress, a.y + (b.y - a.y) * progress);
+            c.strokeStyle = `rgba(${CONFIG.color}, ${alpha.toFixed(3)})`;
+            c.lineWidth = 1;
+            c.stroke();
+        };
+
+        const drawDot = (c, n, alpha) => {
+            c.beginPath();
+            c.arc(n.x, n.y, CONFIG.dotSize, 0, Math.PI * 2);
+            c.fillStyle = `rgba(${CONFIG.color}, ${alpha.toFixed(3)})`;
+            c.fill();
+        };
+
+        const rebake = () => {
+            bakeCtx.clearRect(0, 0, width, height);
+            for (const conn of connectionsRef.current) {
+                if (conn.baked) drawLine(bakeCtx, nodeMap.get(conn.a), nodeMap.get(conn.b), 1, CONFIG.baseLineAlpha);
+            }
+            for (const n of nodesRef.current) {
+                if (n.baked) drawDot(bakeCtx, n, CONFIG.baseDotAlpha);
+            }
+        };
 
         const resize = () => {
             const rect = container.getBoundingClientRect();
             const dpr = Math.min(window.devicePixelRatio || 1, 2);
-            canvas.width = rect.width * dpr;
-            canvas.height = rect.height * dpr;
-            canvas.style.width = rect.width + 'px';
-            canvas.style.height = rect.height + 'px';
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            width = rect.width;
+            height = rect.height;
+            for (const [c, context] of [[canvas, ctx], [bakeCanvas, bakeCtx]]) {
+                c.width = width * dpr;
+                c.height = height * dpr;
+                context.setTransform(dpr, 0, 0, dpr, 0, 0);
+            }
+            canvas.style.width = width + 'px';
+            canvas.style.height = height + 'px';
+            rebake();
         };
         resize();
         window.addEventListener('resize', resize);
@@ -85,7 +116,6 @@ const ContactNextBackground = () => {
                 // Find nearby nodes to connect to
                 const nearby = [];
                 for (const node of nodesRef.current) {
-                    if (node.fadingOut) continue;
                     const ndx = node.x - x;
                     const ndy = node.y - y;
                     const ndistSq = ndx * ndx + ndy * ndy;
@@ -103,29 +133,17 @@ const ContactNextBackground = () => {
                 );
 
                 for (let i = 0; i < connectionsToMake; i++) {
-                    const targetNode = nearby[i].node;
-                    newNode.connections++;
-                    targetNode.connections++;
                     connectionsRef.current.push({
                         a: newNode.id,
-                        b: targetNode.id,
-                        born: now
+                        b: nearby[i].node.id,
+                        born: now,
+                        baked: false,
                     });
                 }
 
                 nodesRef.current.push(newNode);
+                nodeMap.set(newNode.id, newNode);
                 lastSpawnPos.current = { x, y };
-
-                // Cap nodes
-                const activeNodes = nodesRef.current.filter(n => !n.fadingOut);
-                if (activeNodes.length > CONFIG.maxNodes) {
-                    // Find oldest active node
-                    const oldest = activeNodes[0];
-                    if (oldest) {
-                        oldest.fadingOut = true;
-                        oldest.fadeStart = now;
-                    }
-                }
             }
         };
 
@@ -139,80 +157,34 @@ const ContactNextBackground = () => {
         const render = () => {
             if (destroyed) return;
             const now = performance.now();
-            const rect = container.getBoundingClientRect();
-            ctx.clearRect(0, 0, rect.width, rect.height);
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(bakeCanvas, 0, 0, width, height);
 
-            const nodes = nodesRef.current;
-            const connections = connectionsRef.current;
-
-            // Process nodes
-            for (let i = nodes.length - 1; i >= 0; i--) {
-                const n = nodes[i];
-                const age = now - n.born;
-
-                if (n.fadingOut) {
-                    const fadeProgress = (now - n.fadeStart) / CONFIG.nodeFadeTime;
-                    if (fadeProgress >= 1) {
-                        // Remove node and its connections
-                        nodes.splice(i, 1);
-                        for (let c = connections.length - 1; c >= 0; c--) {
-                            if (connections[c].a === n.id || connections[c].b === n.id) {
-                                connections.splice(c, 1);
-                            }
-                        }
-                        continue;
-                    }
-                    n.alpha = CONFIG.baseDotAlpha * (1 - fadeProgress);
-                } else {
-                    if (age >= CONFIG.nodeLifespan) {
-                        n.fadingOut = true;
-                        n.fadeStart = now;
-                    } else if (age < CONFIG.nodeFadeInTime) {
-                        n.alpha = CONFIG.baseDotAlpha * (age / CONFIG.nodeFadeInTime);
-                    } else {
-                        n.alpha = CONFIG.baseDotAlpha;
-                    }
-                }
-            }
-
-            // Draw connections
-            // Create a lookup for active nodes
-            const nodeMap = new Map();
-            for (const n of nodes) nodeMap.set(n.id, n);
-
-            for (const conn of connections) {
+            // Lines still drawing in; bake them once complete
+            for (const conn of connectionsRef.current) {
+                if (conn.baked) continue;
                 const a = nodeMap.get(conn.a);
                 const b = nodeMap.get(conn.b);
-                if (!a || !b) continue;
-
-                const age = now - conn.born;
-                let drawProgress = Math.min(1, age / CONFIG.lineDrawDuration);
-                // Ease out cubic
-                drawProgress = 1 - Math.pow(1 - drawProgress, 3);
-
-                const lineAlpha = Math.min(a.alpha, b.alpha) * (CONFIG.baseLineAlpha / CONFIG.baseDotAlpha);
-
-                if (lineAlpha > 0.005) {
-                    ctx.beginPath();
-                    ctx.moveTo(a.x, a.y);
-                    // Draw line partially based on progress
-                    const currentX = a.x + (b.x - a.x) * drawProgress;
-                    const currentY = a.y + (b.y - a.y) * drawProgress;
-
-                    ctx.lineTo(currentX, currentY);
-                    ctx.strokeStyle = `rgba(${CONFIG.color}, ${lineAlpha.toFixed(3)})`;
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
+                const t = Math.min(1, (now - conn.born) / CONFIG.lineDrawDuration);
+                if (t >= 1) {
+                    conn.baked = true;
+                    drawLine(bakeCtx, a, b, 1, CONFIG.baseLineAlpha);
+                    drawLine(ctx, a, b, 1, CONFIG.baseLineAlpha);
+                    continue;
                 }
+                // Ease out cubic
+                drawLine(ctx, a, b, 1 - Math.pow(1 - t, 3), CONFIG.baseLineAlpha);
             }
 
-            // Draw nodes
-            for (const n of nodes) {
-                if (n.alpha < 0.005) continue;
-                ctx.beginPath();
-                ctx.arc(n.x, n.y, CONFIG.dotSize, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(${CONFIG.color}, ${n.alpha.toFixed(3)})`;
-                ctx.fill();
+            // Points still fading in; bake them once fully visible
+            for (const n of nodesRef.current) {
+                if (n.baked) continue;
+                const t = Math.min(1, (now - n.born) / CONFIG.nodeFadeInTime);
+                if (t >= 1) {
+                    n.baked = true;
+                    drawDot(bakeCtx, n, CONFIG.baseDotAlpha);
+                }
+                drawDot(ctx, n, CONFIG.baseDotAlpha * t);
             }
 
             animRef.current = requestAnimationFrame(render);

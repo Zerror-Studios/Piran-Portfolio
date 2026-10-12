@@ -5,7 +5,7 @@ import { useGSAP } from '@gsap/react'
 import ScrollTrigger from 'gsap/dist/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
-const testimonials = [
+export const testimonials = [
     {
         id: 1,
         quote: "Before designing anything, Piran did the research: the breadth of Salman\u2019s work, what he\u2019s known for, and what people really feel about him. He walked our team through all of it, and the identity and website carry the weight of the name.",

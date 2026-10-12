@@ -299,13 +299,13 @@ const ContactHero = () => {
 
                                 {status === 'error' && (
                                     <div className="mt-8 text-white text-sm">
-                                        Submit failure: Something broke on my side, not yours. Try once more.
+                                        Something broke on my side, not yours. Try once more.
                                     </div>
                                 )}
                                 <div className="w-full flex justify-between items-end">
 
-                                    <CustomButton disabled={status === 'submitting'} type="submit" theme="light" className="mt-10">
-                                        {status === 'submitting' ? 'SENDING...' : "Let's figure it out"}
+                                    <CustomButton disabled={status === 'submitting'} type="submit" theme="light" className={`mt-10 ${status === 'submitting' ? 'opacity-50 animate-pulse cursor-wait' : ''}`}>
+                                        Begin
                                     </CustomButton>
                                     <div className="">
                                         <div className='text-sm'><span className='opacity-60'>Brand or design project? That starts at</span> <a target='_blank' className='underline hover:opacity-100 transition opacity-60 ' href="https://wearepointof.com">Point Of.</a> </div>

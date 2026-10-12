@@ -11,7 +11,8 @@ const CustomButton = ({
   className = "",
   disabled = false,
   theme = "light", // "light" or "dark"
-  icon = "arrow"
+  icon = "arrow",
+  uppercase = true
 }) => {
   const isLight = theme === "light";
 
@@ -29,7 +30,7 @@ const CustomButton = ({
     </>
   );
 
-  const baseClasses = `uppercase rounded-full px-6 hover:pl-1 leading-none h-10 text-sm group transition-all duration-300 pointer-events-auto flex items-center gap-2 ${btnThemeClass} ${className}`;
+  const baseClasses = `${uppercase ? 'uppercase' : ''} rounded-full px-6 hover:pl-1 leading-none h-10 text-sm group transition-all duration-300 pointer-events-auto flex items-center gap-2 ${btnThemeClass} ${className}`;
 
   if (href) {
     return (

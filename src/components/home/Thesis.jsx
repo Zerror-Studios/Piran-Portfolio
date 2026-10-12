@@ -65,30 +65,34 @@ const Thesis = () => {
                 }
             });
 
-            // Leaver lines arrive
+            // Leaver lines: each one comes in, holds, then leaves before the next arrives
             const lines = gsap.utils.toArray('.leaver-line');
             lines.forEach((line, i) => {
-                const startTime = i * 20;
-                contentTl.fromTo(line, 
-                    { opacity: 0, x: 30 }, 
-                    { opacity: 1, x: 0, duration: 20, ease: "power1.out" }, 
+                const startTime = i * 25;
+                contentTl.fromTo(line,
+                    { opacity: 0, y: 30 },
+                    { opacity: 1, y: 0, duration: 8, ease: "power1.out" },
                     startTime
+                );
+                contentTl.to(line,
+                    { opacity: 0, y: -30, duration: 8, ease: "power1.in" },
+                    startTime + 15
                 );
             });
 
-            // lines fade, main title rises
-            contentTl.to('.leaver-line', { opacity: 0, duration: 15, ease: "power1.inOut" }, 60);
-            contentTl.fromTo('.main-thesis-title', 
-                { opacity: 0, y: 40 }, 
-                { opacity: 1, y: 0, duration: 20, ease: "power2.out" }, 
-                65
+            // After all three lines, main title rises
+            const afterLines = lines.length * 25;
+            contentTl.fromTo('.main-thesis-title',
+                { opacity: 0, y: 40 },
+                { opacity: 1, y: 0, duration: 15, ease: "power2.out" },
+                afterLines
             );
 
             // body, ask, button rise
             contentTl.fromTo('.body-ask',
                 { opacity: 0, y: 40 },
-                { opacity: 1, y: 0, duration: 40, ease: "power2.out" },
-                80
+                { opacity: 1, y: 0, duration: 20, ease: "power2.out" },
+                afterLines + 10
             );
 
             
@@ -105,30 +109,31 @@ const Thesis = () => {
                     {/* Image Columns (Left 5) */}
                     <div className="w-full h-full relative shrink-0">
                         <img 
-                            src="/images/homepage/partners/full_img_4.JPG"
+                            src="/images/homepage/partners/portfolio_image.png"
                             className="thesis-target-img w-full h-full object-cover object-[50%_30%]"
                             alt="Thesis"
                         />
                     </div>
                     
                     {/* Content Columns (Right 7) */}
-                    <div className="absolute h-screen flex flex-col justify-center padding top-0 left-0 text-white z-10">
-                        
-                        {/* Leaver Lines */}
-                        <div className="absolute inset-0 flex flex-col justify-center padding pointer-events-none">
-                            <h4 className="leaver-line opacity-0  leading-tight mb-10 flex items-center">
+                    <div className="absolute h-screen flex flex-col justify-center padding top-0 right-0 w-1/2 text-white z-10">
+
+                        {/* Leaver Lines - stacked in the same spot, shown one at a time */}
+                        <div className="absolute inset-0 grid items-center  justify-end padding pointer-events-none">
+                            <h4 className="leaver-line opacity-0  w-[30vw] leading-tight  [grid-area:1/1]">
                                 Consultants leave after the recommendation.
                             </h4>
-                            <h4 className="leaver-line opacity-0  leading-tight mb-10 flex items-center">
+                            <h4 className="leaver-line opacity-0  w-[30vw] leading-tight  [grid-area:1/1]">
                                 Agencies leave after the deliverable.
                             </h4>
-                            <h4 className="leaver-line opacity-0  leading-tight mb-10 flex items-center">
+                            <h4 className="leaver-line opacity-0  w-[30vw] leading-tight  [grid-area:1/1]">
                                 Investors show up for board meetings.
                             </h4>
                         </div>
 
                         {/* Main Thesis Content */}
-                        <div className="main-thesis flex flex-col relative z-30">
+                        <div className="main-thesis flex justify-end  relative z-30">
+                            <div className="w-[30vw] flex flex-col ">
                             <div className="main-thesis-title opacity-0">
                                 <h2 className="leading-none mb-8">
                                     Nobody stays. <br /> I stay. 
@@ -152,6 +157,7 @@ const Thesis = () => {
                                <CustomButton theme='dark' href="/thesis" className="w-fit">
                                                         Read the full thesis
                                                     </CustomButton>
+                            </div>
                             </div>
                         </div>
                     </div>
