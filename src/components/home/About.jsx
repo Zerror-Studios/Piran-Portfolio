@@ -21,7 +21,7 @@ const logoData = [
     {
         id: 3,
         img: "/images/homepage/hero/logo1.svg",
-        desc: "A founder in Build3's tenth cohort, where the next venture took shape in the nutraceutical space.",
+        desc: "A founder in Build3's tenth cohort, where the search for the next venture began.",
         author: "Build3"
     }
 ];
