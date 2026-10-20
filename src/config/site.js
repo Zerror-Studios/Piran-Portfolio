@@ -8,17 +8,12 @@ export const siteConfig = {
   keywords: [
     "Piran Tarapore",
     "Brand Architect",
-    "Strategic Catalyst",
     "Brand Strategy",
-    "Creative Consultancy",
     "Point Of",
     "Brand Positioning",
     "Pre-seed to Seed",
     "Strategic Equity",
     "Bombay",
-    "Wellness Brands",
-    "Healthcare Brands",
-    "Financial Services Brands",
   ],
   contact: {
     phone: "",
@@ -44,7 +39,7 @@ export const siteRoutes = [
     path: "/",
     label: "Home",
     title: "Piran Tarapore · Building brands. Backing founders.",
-    description: "Brand architect and strategic catalyst. Strategy first, equity where the alignment runs deep, from zero to one and long after.",
+    description: "Brand architect to early-stage founders. Strategy first, equity where the alignment runs deep, from zero to one and long after.",
     priority: 1,
   },
   {
@@ -60,5 +55,12 @@ export const siteRoutes = [
     title: "Let's Talk · Piran Tarapore",
     description: "Whatever brings you here: strategic equity, press, or a conversation. One form, read personally.",
     priority: 0.7,
+  },
+  {
+    path: "/thesis",
+    label: "Thesis",
+    title: "The Thesis · Piran Tarapore",
+    description: "There are two kinds of backing: the kind that steers you, and the kind that moves with you. Mine is the second.",
+    priority: 0.8,
   },
 ];

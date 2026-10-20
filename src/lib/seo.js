@@ -87,12 +87,14 @@ export function createRootMetadata() {
   };
 }
 
-export function createPageMetadata(path) {
+export function createPageMetadata(path, extra = {}) {
   const page = getPageSeo(path);
 
   return createMetadata({
     title: page.title,
     description: page.description,
     path: page.path,
+    ...(page.keywords ? { keywords: page.keywords } : {}),
+    ...extra,
   });
 }
